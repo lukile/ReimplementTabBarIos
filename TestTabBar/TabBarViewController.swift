@@ -27,40 +27,59 @@ public class TabBarViewController: UIViewController {
         let screensize = UIScreen.main.bounds
         let screensizeWidth = screensize.width
         
-        let imageButtonWidth = screensize.width * 0.2
-        
+        let imageHomeButtonWidth = setButtonSize(buttonWidth: 0.2)
+        let imageProfileButtonWidth = setButtonSize(buttonWidth: 0.4)
+
         // Dev can select tab bar color
         container.backgroundColor = .red
         
-        let imageButton = UIButton()
-        imageButton.backgroundColor = .yellow
+        let imageHomeButton = UIButton()
+
+        imageHomeButton.backgroundColor = .yellow
+        
         //Dev can choose UIImage set on UIImageView
         let homeImage = UIImage(named: "home")
-        let imageView = UIImageView(image: homeImage)
-        imageView.backgroundColor = .blue
-        
-        imageView.image = homeImage
+        let imageHomeView = UIImageView(image: homeImage)
+        imageHomeView.backgroundColor = .blue
+        imageHomeView.image = homeImage
         
         //Dev can choose width button
-        imageButton.frame = CGRect(x: 0, y: 0,  width: imageButtonWidth, height: 50)
+        imageHomeButton.frame = CGRect(x: 0, y: 0,  width: imageHomeButtonWidth, height: 50)
         
         //Dev can choose position of UIIMageView by x value
         //Eventually change width if icon is too big or small -> in this case respect original
         //image width and height
-        imageView.frame = CGRect(x: 20, y: 0, width: (homeImage?.size.width)!, height: (homeImage?.size.height)!)
+        imageHomeView.frame = CGRect(x: 20, y: 0, width: (homeImage?.size.width)!, height: (homeImage?.size.height)!)
         //Determine if imageView is inside button or not
-        if(imageView.frame.maxX > imageButton.frame.size.width || imageView.frame.minX < 0) {
-            imageView.frame = CGRect(x: (imageButton.frame.size.width) - 70, y: 0, width: (homeImage?.size.width)!, height: (homeImage?.size.height)!)
+        setDefaultFrame(imageView: imageHomeView, button:imageHomeButton , image: homeImage)
+        
+        /*if(imageHomeView.frame.maxX > imageHomeButton.frame.size.width || imageHomeView.frame.minX < 0) {
+            imageHomeView.frame = CGRect(x: (imageHomeButton.frame.size.width) - 70, y: 0, width: (homeImage?.size.width)!, height: (homeImage?.size.height)!)
             
             print("image view is not inside button, default value assigned")
         } else {
             print("image view size ok")
-        }
+        }*/
         
-        imageButton.addSubview(imageView)
-        container.addSubview(imageButton)
+        let imageProfileButton = UIButton()
+        imageProfileButton.backgroundColor = .orange
         
-        imageButton.addTarget(self, action: Selector(("clickButton:")), for: .touchUpInside)
+        let profileImage = UIImage(named: "profile")
+        let imageProfileView = UIImageView(image: profileImage)
+        imageProfileView.backgroundColor = .brown
+        imageProfileView.image = profileImage
+        
+        imageProfileButton.frame = CGRect(x: (imageHomeButton.frame.size.width) + 0.1, y: 0, width: imageProfileButtonWidth, height: 50)
+        imageProfileView.frame = CGRect(x: 50, y: 0, width: (profileImage?.size.width)!, height: (profileImage?.size.height)!)
+
+        setDefaultFrame(imageView: imageProfileView, button: imageProfileButton, image: profileImage)
+        
+        imageHomeButton.addSubview(imageHomeView)
+        imageProfileButton.addSubview(imageProfileView)
+        container.addSubview(imageHomeButton)
+        container.addSubview(imageProfileButton)
+        
+        imageHomeButton.addTarget(self, action: #selector(clickButton), for: .touchUpInside)
         
         //Add container to view
         self.view.addSubview(container)
@@ -81,7 +100,23 @@ public class TabBarViewController: UIViewController {
         
         NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstaint, heightConstaint])
     }
-    public func clickButton(_sender: UIButton)  {
+    public func setButtonSize(buttonWidth: CGFloat) -> CGFloat {
+        let screensizeWidth = UIScreen.main.bounds.width
+        
+        return screensizeWidth * buttonWidth
+    }
+    
+    public func setDefaultFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
+        if(imageView.frame.maxX > button.frame.size.width || imageView.frame.minX < 0) {
+            imageView.frame = CGRect(x: (button.frame.size.width) - 70, y: 0, width: (image?.size.width)!, height: (image?.size.height)!)
+            
+            print("image view is not inside button, default value assigned")
+        } else {
+            print("image view size ok")
+        }
+    }
+    
+    @objc public func clickButton(_sender: UIButton)  {
         print("button clicked")
     }
 }
