@@ -16,23 +16,30 @@ public class TabBarViewController: UIViewController {
     //var button: UIBarButtonItem?
     
     override public func viewDidLoad() {
-     super.viewDidLoad()
-     view.backgroundColor = .white
-     launchApp()
-     }
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        launchApp()
+    }
     
     public func launchApp(){
+        // container
+        let tabBar = TabBar(coder: NSCoder())
+        tabBar!.setContainer(container: self)
+        
+        tabBar!.setBackgroundColor(color: .red)
+        //tabBar!.setPosition(position: Position.TOP)
+        // defini les bouttons
+        // redefini (ou pas) le backgroundcolor)
+        // ...
+        
+        tabBar!.build()
+        
+        
         let container = UIView()
-        
-        let screensize = UIScreen.main.bounds
-        let screensizeWidth = screensize.width
-        
+    
         let imageHomeButtonWidth = setButtonSize(buttonWidth: 0.2)
         let imageProfileButtonWidth = setButtonSize(buttonWidth: 0.4)
 
-        // Dev can select tab bar color
-        container.backgroundColor = .red
-        
         let imageHomeButton = UIButton()
 
         imageHomeButton.backgroundColor = .yellow
@@ -83,23 +90,8 @@ public class TabBarViewController: UIViewController {
         
         //Add container to view
         self.view.addSubview(container)
-        
-        //Add constraints
-        container.translatesAutoresizingMaskIntoConstraints = false
-        
-        //Width is sized to screensize width and fixed automatically to bottom
-        let horizontalConstraint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.bottomMargin, multiplier: 1, constant: 0)
-        let widthConstaint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute:
-            NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: screensizeWidth)
-        let heightConstaint = NSLayoutConstraint(item: container, attribute:
-            NSLayoutConstraint.Attribute.height, relatedBy:
-            NSLayoutConstraint.Relation.equal, toItem: nil, attribute:
-            NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant:
-            50)
-        
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstaint, heightConstaint])
     }
+    
     public func setButtonSize(buttonWidth: CGFloat) -> CGFloat {
         let screensizeWidth = UIScreen.main.bounds.width
         
