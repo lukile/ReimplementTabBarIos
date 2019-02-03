@@ -29,13 +29,13 @@ public class TabBarViewController: UIViewController {
         //Add container to view
         self.view.addSubview(container)
         
-        //topTabBar(container: container, tabBarSize: 50)
+        //topTabBar(container: container)
         
-        //bottomTabBar(container: container, tabBarSize: 50)
+        //bottomTabBar(container: container)
         
         leftTabBar(container: container)
         
-        //rightTabBar(container: container, tabBarSize: 60)
+        //rightTabBar(container: container)
        
     }
     
@@ -54,6 +54,16 @@ public class TabBarViewController: UIViewController {
     public func setDefaultWidthFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
         if(imageView.frame.maxX > button.frame.size.width || imageView.frame.minX < 0) {
             imageView.frame = CGRect(x: (button.frame.size.width) - 70, y: 0, width: (image?.size.width)!, height: (image?.size.height)!)
+            
+            print("image view is not inside button, default value assigned")
+        } else {
+            print("image view size ok")
+        }
+    }
+    
+    public func setDefaultHeightFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
+        if(imageView.frame.maxY > button.frame.size.height || imageView.frame.minY < 0) {
+            imageView.frame = CGRect(x: 0, y: (button.frame.size.height) - 100, width: 60, height: (image?.size.height)!)
             
             print("image view is not inside button, default value assigned")
         } else {
@@ -186,6 +196,7 @@ public class TabBarViewController: UIViewController {
         
         imageInfoButton.frame = CGRect(x: 0, y: 0, width: tabBarSize, height: imageInfoButtonHeight)
         imageInfoView.frame = CGRect(x: 0, y: 20, width: tabBarSize, height: (infoImage?.size.height)!)
+        setDefaultHeightFrame(imageView: imageInfoView, button: imageInfoButton, image: infoImage)
         
         imageInfoButton.addSubview(imageInfoView)
         
@@ -199,6 +210,7 @@ public class TabBarViewController: UIViewController {
         
         imageSettingsButton.frame = CGRect(x: 0, y: (imageInfoButton.frame.size.height) + 0.1, width: tabBarSize, height: imageSettingsButtonHeight)
         imageSettingsView.frame = CGRect(x: 0, y: (imageInfoButton.frame.size.height) + 0.1, width: tabBarSize, height: (settingsImage?.size.height)!)
+        setDefaultHeightFrame(imageView: imageSettingsView, button: imageSettingsButton, image: settingsImage)
         
         imageSettingsButton.addSubview(imageSettingsView)
         
@@ -224,7 +236,8 @@ public class TabBarViewController: UIViewController {
         
         imageInfoButton.frame = CGRect(x: 0, y: 0, width: tabBarSize, height: imageInfoButtonHeight)
         imageInfoView.frame = CGRect(x: 0, y: 20, width: tabBarSize, height: (infoImage?.size.height)!)
-        
+        setDefaultHeightFrame(imageView: imageInfoView, button: imageInfoButton, image: infoImage)
+
         imageInfoButton.addSubview(imageInfoView)
         
         let imageSettingsButton = UIButton()
@@ -237,6 +250,7 @@ public class TabBarViewController: UIViewController {
         
         imageSettingsButton.frame = CGRect(x: 0, y: (imageInfoButton.frame.size.height) + 0.1, width: tabBarSize, height: imageSettingsButtonHeight)
         imageSettingsView.frame = CGRect(x: 0, y: (imageInfoButton.frame.size.height) + 0.1, width: tabBarSize, height: (settingsImage?.size.height)!)
+        setDefaultHeightFrame(imageView: imageSettingsView, button: imageSettingsButton, image: settingsImage)
         
         imageSettingsButton.addSubview(imageSettingsView)
         
