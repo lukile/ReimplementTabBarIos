@@ -34,14 +34,16 @@ public class TabBar : UIView {
     let contentView: UIView = {
         let screensize = UIScreen.main.bounds
         
-        let view = UIView(frame: CGRect(x: 0, y: 100, width: screensize.width, height: 50))
+        let view = UIView()
+       
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.lightGray.cgColor
+        
         return view
     }()
     
-    public func setTabBarColor() {
-        contentView.layer.backgroundColor = UIColor.red.cgColor
+    public func setTabBarColor(color: UIColor) {
+        contentView.backgroundColor = color
     }
    
     public func setContainer(container: UIViewController) {
@@ -52,15 +54,14 @@ public class TabBar : UIView {
         // container must not be null to continue
         
         definePosition()
-        
+        self.backgroundColor = .white
+
         /*defineButtons()
         
         for(button in buttons) {
             self.addSubview(button)
         }*/
         
-        self.backgroundColor = bgColor
-        container!.view.addSubview(self)
     }
     
     public func definePosition() {
@@ -68,8 +69,8 @@ public class TabBar : UIView {
         // TODO : change constraint depending on setPosition call
         
         //Width is sized to screensize width and fixed automatically to bottom
-        let horizontalConstraint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: container, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: container, attribute: NSLayoutConstraint.Attribute.bottomMargin, multiplier: 1, constant: 0)
+        let horizontalConstraint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        let verticalConstraint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottomMargin, multiplier: 1, constant: 0)
         
         let screensizeWidth = UIScreen.main.bounds.width
         let widthConstaint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute:
@@ -83,8 +84,10 @@ public class TabBar : UIView {
         NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstaint, heightConstaint])
     }
     
-    public func addButton(button: UIButton) {
-        buttons.append(button)
+    public func addButton(numberButton: Int) {
+        for _ in 1...numberButton {
+            buttons.append(UIButton())
+        }
     }
     
     public func fixWidthButton(button: UIButton, width: CGFloat) {
@@ -128,14 +131,5 @@ public class TabBar : UIView {
         } else {
             print("image view size ok")
         }
-    }
-}
-
-extension NSCoder {
-    class func empty() -> NSCoder {
-        let data = NSMutableData()
-        let archiver = NSKeyedArchiver(forWritingWith: data)
-        archiver.finishEncoding()
-        return NSKeyedUnarchiver(forReadingWith: data as Data)
     }
 }
