@@ -266,7 +266,7 @@ public class TabBarViewController: UIViewController {
         
         //Width is sized to screensize width and fixed automatically to bottom
         let horizontalConstraint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.topMargin, multiplier: 2, constant: 0)
+        let verticalConstraint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.topMargin, multiplier: 1, constant: 0)
         let widthConstaint = NSLayoutConstraint(item: container, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute:
             NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: screensizeWidth)
         let heightConstaint = NSLayoutConstraint(item: container, attribute:
