@@ -15,11 +15,15 @@ public class TabBar : UIView {
     private weak var container: UIViewController?
     private var position: Position = Position.BOTTOM
     private var bgColor: UIColor?
-    //private var buttons: List<UIButton>
+    private var buttons = [UIButton]()
     
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
     }
+    
+    
+    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented"); }
+
     
     public func setContainer(container: UIViewController?) {
         self.container = container
@@ -29,6 +33,7 @@ public class TabBar : UIView {
         // container must not be null to continue
         
         definePosition()
+        
         /*defineButtons()
         
         for(button in buttons) {
@@ -37,18 +42,6 @@ public class TabBar : UIView {
         
         self.backgroundColor = bgColor
         container!.view.addSubview(self)
-    }
-    
-    /*public func addButton(button: UIButton) {
-        buttons.add(button)
-    }*/
-    
-    public func setPosition(position: Position) {
-        self.position = position
-    }
-    
-    public func setBackgroundColor(color: UIColor?) {
-        self.bgColor = color
     }
     
     private func definePosition() {
@@ -69,5 +62,61 @@ public class TabBar : UIView {
             50)
         
         NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstaint, heightConstaint])
+    }
+    
+    public func addButton(button: UIButton) {
+        buttons.append(button)
+    }
+    
+    public func fixWidthButton(button: UIButton, width: CGFloat) {
+        let imageButtonWidth = setButtonSize(buttonWidth: width)
+        button.frame = CGRect(x: 0, y: 0, width:imageButtonWidth, height: 50)
+    }
+    
+    private func setButtonSize(buttonWidth: CGFloat) -> CGFloat {
+        let screensizeWidth = UIScreen.main.bounds.width
+        
+        return screensizeWidth * buttonWidth
+    }
+    
+    public func addImageToImageView(imageName: String) {
+        let image = UIImage(named: imageName)
+        let imageView = UIImageView(image: image)
+        imageView.image = image
+    }
+    
+    public func setImageViewPosition(imageView: UIImageView, xValue: CGFloat, image: UIImage){
+        
+        let imageWidth = image.size.width
+        let imageHeight = image.size.height
+        
+        imageView.frame = CGRect(x: xValue, y: 0, width: imageWidth, height: imageHeight)
+    }
+    
+    public func setPosition(position: Position) {
+        self.position = position
+    }
+    
+    public func setBackgroundColor(color: UIColor?) {
+        self.bgColor = color
+    }
+    
+    public func setDefaultFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
+        if(imageView.frame.maxX > button.frame.size.width || imageView.frame.minX < 0) {
+            imageView.frame = CGRect(x: (button.frame.size.width) - 70, y: 0, width: (image?.size.width)!, height: (image?.size.height)!)
+            
+            print("image view is not inside button, default value assigned")
+        } else {
+            print("image view size ok")
+        }
+    }
+}
+
+extension NSCoder {
+    class func empty() -> NSCoder {
+        let data = NSMutableData()
+        let archiver = NSKeyedArchiver(forWritingWith: data)
+        archiver.finishEncoding()
+        return NSKeyedUnarchiver(forReadingWith: data as Data)
     }
 }
