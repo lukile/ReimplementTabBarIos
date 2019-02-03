@@ -9,34 +9,38 @@
 import UIKit
 
 public class TabBarViewController: UIViewController {
+    var tabBar: TabBar { return self.view as! TabBar}
     
-    /*required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }*/
-    //var button: UIBarButtonItem?
-    
+  
     override public func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        launchApp()
+        
+    
+        //tabBar.setContainer(container: self)
+      tabBar.setTabBarColor()
+    
+        //self.view.addSubview(tabBar)
+
+    }
+    
+    override public func loadView() {
+        self.view = TabBar(frame: UIScreen.main.bounds)
     }
     
     public func launchApp(){
         // container
-        let tabBar = TabBar(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+      
         
-        tabBar.setContainer(container: self)
-        
-        tabBar.setBackgroundColor(color: .red)
+       
         
         //tabBar!.setPosition(position: Position.TOP)
         // defini les bouttons
         // redefini (ou pas) le backgroundcolor)
         // ...
         
-        tabBar.build()
+      //  tabBar.build()
         
-        self.view.addSubview(tabBar)
         
         
         //let container = UIView()
