@@ -15,13 +15,11 @@ public class TabBarViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
     
         //tabBar.setContainer(container: self)
         tabBar.setTabBarColor(color: .blue)
         tabBar.definePosition()
         tabBar.addButton(numberButton: 3)
-        tabBar.setButtonColor()
 
     
         //self.view.addSubview(tabBar)
