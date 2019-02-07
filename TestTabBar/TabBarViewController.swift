@@ -31,9 +31,9 @@ public class TabBarViewController: UIViewController {
         
         //topTabBar(container: container)
         
-        //bottomTabBar(container: container)
+        bottomTabBar(container: container)
         
-        leftTabBar(container: container)
+        //leftTabBar(container: container)
         
         //rightTabBar(container: container)
        
