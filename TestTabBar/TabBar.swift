@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 public class TabBar : UIView {
     
@@ -16,6 +17,10 @@ public class TabBar : UIView {
     private var position: Position = Position.BOTTOM
     private var bgColor: UIColor?
     private var buttons = [UIButton]()
+    private var numberButtons = [Int]()
+    
+    let screensizeWidth = UIScreen.main.bounds.width
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,28 +70,71 @@ public class TabBar : UIView {
     }
     
     public func definePosition() {
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        // TODO : change constraint depending on setPosition call
+        //let screensizeHeight = UIScreen.main.bounds.height
         
-        //Width is sized to screensize width and fixed automatically to bottom
-        let horizontalConstraint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self, attribute: NSLayoutConstraint.Attribute.bottomMargin, multiplier: 1, constant: 0)
+        /*Right
+            contentView.snp.makeConstraints { (make) -> Void in
+                make.size.equalTo(CGSize(width: 50, height: screensizeHeight))
+                make.top.equalTo(self)
+                make.bottom.equalTo(self)
+                make.right.equalTo(self)
+            }*/
+ 
+        /*Top
+            contentView.snp.makeConstraints { (make) -> Void in
+            make.size.equalTo(CGSize(width: screensizeWidth, height: 50))
+            make.left.right.equalTo(self)
+            make.top.equalTo(self).offset(60)
+        }*/
         
-        let screensizeWidth = UIScreen.main.bounds.width
-        let widthConstaint = NSLayoutConstraint(item: contentView, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute:
-            NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: screensizeWidth)
-        let heightConstaint = NSLayoutConstraint(item: contentView, attribute:
-            NSLayoutConstraint.Attribute.height, relatedBy:
-            NSLayoutConstraint.Relation.equal, toItem: nil, attribute:
-            NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant:
-            50)
+        /*  Left
+            contentView.snp.makeConstraints { (make) -> Void in
+            make.size.equalTo(CGSize(width: 50, height: screensizeHeight))
+            make.top.equalTo(self)
+            make.bottom.equalTo(self)
+            make.left.equalTo(self)
+        }*/
         
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstaint, heightConstaint])
+
+            contentView.snp.makeConstraints { (make) -> Void in
+            make.size.equalTo(CGSize(width: screensizeWidth, height: 50))
+            make.left.right.equalTo(self)
+            make.bottom.equalTo(self).offset(-20)
+        }
     }
     
-    public func addButton(numberButton: Int) {
+    public func selectNumberOfButton(numberButton: Int) -> [UIButton] {
         for _ in 1...numberButton {
             buttons.append(UIButton())
+            numberButtons.append(numberButton)
+        }
+        return buttons
+    }
+    
+    public func chooseSizeButton(buttons: [UIButton], sizeButtons: CGFloat...) {
+        if sizeButtons.count > buttons.count {
+            print("Too many values")
+        }
+        for _ in buttons {
+            for sizeButton in sizeButtons {
+                print(setButtonSizeWidth(buttonWidth: sizeButton))
+                
+                
+            }
+        }
+    }
+    
+    private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
+        return screensizeWidth * buttonWidth
+    }
+    
+    public func addButtonToTabBar(buttons: [UIButton]) {
+        for button in buttons {
+            button.backgroundColor = .yellow
+            
+            button.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+            
+            contentView.addSubview(button)
         }
     }
     

@@ -19,7 +19,11 @@ public class TabBarViewController: UIViewController {
         //tabBar.setContainer(container: self)
         tabBar.setTabBarColor(color: .blue)
         tabBar.definePosition()
-        tabBar.addButton(numberButton: 3)
+        let buttons = tabBar.selectNumberOfButton(numberButton: 3)
+        tabBar.chooseSizeButton(buttons: buttons, sizeButtons: 0.2, 0.4, 0.6)
+        
+        //tabBar.addButtonToTabBar(buttons: buttons)
+        
 
     
         //self.view.addSubview(tabBar)
