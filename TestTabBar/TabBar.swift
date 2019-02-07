@@ -112,15 +112,32 @@ public class TabBar : UIView {
     }
     
     public func chooseSizeButton(buttons: [UIButton], sizeButtons: CGFloat...) {
+        var gap: CGFloat = 0.0
+        var n: CGFloat = 0
+        var count: Int = 0
+
         if sizeButtons.count > buttons.count {
             print("Too many values")
         }
-        for sizeButton in sizeButtons {
+        //for sizeButton in sizeButtons {
             for button in buttons {
-                button.frame = CGRect(x: 0, y: 0, width: setButtonSizeWidth(buttonWidth: sizeButton), height: 50)
+                buttons[0].backgroundColor = .yellow
+                buttons[1].backgroundColor = .orange
+                buttons[2].backgroundColor = .red
+                button.frame = CGRect(x: n + gap, y: 0, width: setButtonSizeWidth(buttonWidth: sizeButtons[count]), height: 50)
                 contentView.addSubview(button)
+                
+                print("width ", setButtonSizeWidth(buttonWidth: sizeButtons[count]))
+                print("x ", n + gap)
+                
+                
+                n = button.frame.size.width
+                
+                gap = 1
+                
+                count += 1
             }
-        }
+        //}
     }
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {

@@ -20,7 +20,7 @@ public class TabBarViewController: UIViewController {
         tabBar.setTabBarColor(color: .blue)
         tabBar.definePosition()
         let buttons = tabBar.selectNumberOfButton(numberButton: 3)
-        tabBar.chooseSizeButton(buttons: buttons, sizeButtons: 0.2, 0.4, 0.2)
+        tabBar.chooseSizeButton(buttons: buttons, sizeButtons: 0.2, 0.3, 0.1)
         
         //tabBar.addButtonToTabBar(buttons: buttons)
         
