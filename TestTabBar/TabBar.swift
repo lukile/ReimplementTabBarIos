@@ -14,12 +14,13 @@ public class TabBar : UIView {
     
     // private let <= const
     private var container: UIViewController?
-    private var position: Position = Position.BOTTOM
+    private var position = Position.self
     private var bgColor: UIColor?
     private var buttons = [UIButton]()
     private var numberButtons = [Int]()
     
     let screensizeWidth = UIScreen.main.bounds.width
+    let screensizeHeight = UIScreen.main.bounds.height
 
     
     override init(frame: CGRect) {
@@ -58,7 +59,7 @@ public class TabBar : UIView {
     public func build() {
         // container must not be null to continue
         
-        definePosition()
+        definePosition(position: Position.LEFT)
         self.backgroundColor = .white
 
         /*defineButtons()
@@ -69,37 +70,38 @@ public class TabBar : UIView {
         
     }
     
-    public func definePosition() {
-        //let screensizeHeight = UIScreen.main.bounds.height
+    public func definePosition(position: Position) {
+        let screensizeHeight = UIScreen.main.bounds.height
         
-        /*Right
+        switch position {
+        case .BOTTOM:
+            contentView.snp.makeConstraints { (make) -> Void in
+                make.size.equalTo(CGSize(width: screensizeWidth, height: 50))
+                make.left.right.equalTo(self)
+                make.bottom.equalTo(self).offset(-20)
+            }
+        case .TOP:
+            contentView.snp.makeConstraints { (make) -> Void in
+                make.size.equalTo(CGSize(width: screensizeWidth, height: 50))
+                make.left.right.equalTo(self)
+                make.top.equalTo(self).offset(60)
+            }
+        case .RIGHT:
             contentView.snp.makeConstraints { (make) -> Void in
                 make.size.equalTo(CGSize(width: 50, height: screensizeHeight))
                 make.top.equalTo(self)
                 make.bottom.equalTo(self)
                 make.right.equalTo(self)
-            }*/
- 
-        /*Top
+            }
+        case .LEFT:
             contentView.snp.makeConstraints { (make) -> Void in
-            make.size.equalTo(CGSize(width: screensizeWidth, height: 50))
-            make.left.right.equalTo(self)
-            make.top.equalTo(self).offset(60)
-        }*/
-        
-        /*  Left
-            contentView.snp.makeConstraints { (make) -> Void in
-            make.size.equalTo(CGSize(width: 50, height: screensizeHeight))
-            make.top.equalTo(self)
-            make.bottom.equalTo(self)
-            make.left.equalTo(self)
-        }*/
-        
-
-            contentView.snp.makeConstraints { (make) -> Void in
-            make.size.equalTo(CGSize(width: screensizeWidth, height: 50))
-            make.left.right.equalTo(self)
-            make.bottom.equalTo(self).offset(-20)
+                make.size.equalTo(CGSize(width: 50, height: screensizeHeight))
+                make.top.equalTo(self)
+                make.bottom.equalTo(self)
+                make.left.equalTo(self)
+            }
+        //default:
+          //  position = position.BOTTOM
         }
     }
     
@@ -112,20 +114,21 @@ public class TabBar : UIView {
     }
     
     public func chooseSizeButton(buttons: [UIButton], sizeButtons: CGFloat...) {
+        
+        var position = Position.self
+        
         var gap: CGFloat = 0.0
-        var n: CGFloat = 0
+        var n: CGFloat = 0.0
         var count: Int = 0
-
-        if sizeButtons.count > buttons.count {
-            print("Too many values")
-        }
-        //for sizeButton in sizeButtons {
+        if position == .BOTTOM || position == .TOP {
+            if sizeButtons.count > buttons.count {
+                print("Too many values")
+            }
             for button in buttons {
                 buttons[0].backgroundColor = .yellow
                 buttons[1].backgroundColor = .orange
-                buttons[2].backgroundColor = .red
+
                 button.frame = CGRect(x: n + gap, y: 0, width: setButtonSizeWidth(buttonWidth: sizeButtons[count]), height: 50)
-                contentView.addSubview(button)
                 
                 print("width ", setButtonSizeWidth(buttonWidth: sizeButtons[count]))
                 print("x ", n + gap)
@@ -133,15 +136,71 @@ public class TabBar : UIView {
                 
                 n = button.frame.size.width
                 
-                gap = 1
+                gap = 0.1
+                
+                count += 1
+                contentView.addSubview(button)
+            }
+        } else if position == .RIGHT || position == .LEFT {
+            for button in buttons {
+                buttons[0].backgroundColor = .yellow
+                buttons[1].backgroundColor = .orange
+                
+                 button.frame = CGRect(x: 0, y: n + gap, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
+                
+                n = button.frame.size.height
+                
+                gap = 0.1
+                
+                count += 1
+                contentView.addSubview(button)
+            }
+        }
+    }
+    
+    public func addImageView(buttons: [UIButton], icone: String...){
+        var count: Int = 0
+        if position == .BOTTOM || position == .TOP {
+            for button in buttons {
+                let image = UIImage(named: icone[count])
+                let imageView = UIImageView(image: image)
+                imageView.image = image
+                
+                imageView.frame = CGRect(x: 20, y: 0, width: (image?.size.width)!, height: (image?.size.height)!)
+                
+                button.addSubview(imageView)
                 
                 count += 1
             }
-        //}
+        } else if position == .LEFT || position == .RIGHT {
+            var yValue: CGFloat = 20
+            var gap: CGFloat = 0.0
+            
+            for button in buttons {
+
+                let image = UIImage(named: icone[count])
+                let imageView = UIImageView(image: image)
+                imageView.image = image
+                
+                imageView.frame = CGRect(x: 0, y: yValue + gap, width: 60, height: (image?.size.height)!)
+                
+                button.addSubview(imageView)
+                
+                yValue = button.frame.size.height
+                
+                gap += 0.1
+                
+                count += 1
+            }
+        }
     }
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
         return screensizeWidth * buttonWidth
+    }
+    
+    private func setButtonHeight(buttonHeight: CGFloat) -> CGFloat {
+        return screensizeHeight * buttonHeight
     }
     
     public func addButtonToTabBar(buttons: [UIButton]) {
@@ -165,23 +224,9 @@ public class TabBar : UIView {
         return screensizeWidth * buttonWidth
     }
     
-    public func addImageToImageView(imageName: String) {
-        let image = UIImage(named: imageName)
-        let imageView = UIImageView(image: image)
-        imageView.image = image
-    }
-    
-    public func setImageViewPosition(imageView: UIImageView, xValue: CGFloat, image: UIImage){
-        
-        let imageWidth = image.size.width
-        let imageHeight = image.size.height
-        
-        imageView.frame = CGRect(x: xValue, y: 0, width: imageWidth, height: imageHeight)
-    }
-    
-    public func setPosition(position: Position) {
-        self.position = position
-    }
+    //public func setPosition(position: Position) {
+      //  self.position = position
+    //}
     
     public func setBackgroundColor(color: UIColor?) {
         self.bgColor = color
