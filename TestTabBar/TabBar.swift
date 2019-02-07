@@ -115,11 +115,10 @@ public class TabBar : UIView {
         if sizeButtons.count > buttons.count {
             print("Too many values")
         }
-        for _ in buttons {
-            for sizeButton in sizeButtons {
-                print(setButtonSizeWidth(buttonWidth: sizeButton))
-                
-                
+        for sizeButton in sizeButtons {
+            for button in buttons {
+                button.frame = CGRect(x: 0, y: 0, width: setButtonSizeWidth(buttonWidth: sizeButton), height: 50)
+                contentView.addSubview(button)
             }
         }
     }
