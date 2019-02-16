@@ -20,6 +20,8 @@ public class TabBar : UIView {
     private var bgColor: UIColor?
     private var buttons = [UIButton]()
     private var numberButtons = [Int]()
+    private var arrayButtonDeleted: [UIButton] = []
+    private var tableView: UITableView!
     
     let screensizeWidth = UIScreen.main.bounds.width
     let screensizeHeight = UIScreen.main.bounds.height
@@ -109,34 +111,72 @@ public class TabBar : UIView {
     public func selectNumberOfButton(numberButton: Int) -> [UIButton] {
         for _ in 1...numberButton {
             buttons.append(UIButton())
-            numberButtons.append(numberButton)
         }
+        
+        self.addButtonToTabBar(sizeTabBar: screensizeWidth)
+        
         return buttons
+        
     }
+    
+    private func changePlaceButton() {
+        guard let lastButton = self.buttons.last else {
+            return;
+        }
+        let imageMore = UIImage(named: "more")
+        let buttonMore: UIButton = UIButton()
+        guard let frameButtonMore = self.buttons.last?.frame else { return }
+        buttonMore.frame = frameButtonMore
+        buttonMore.setImage(imageMore, for: .normal)
+        buttonMore.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+        self.buttons.removeLast()
+        self.buttons.append(buttonMore)
+        self.arrayButtonDeleted.insert(lastButton, at: 0)
+        
+        for button in self.buttons {
+            self.contentView.addSubview(button)
+        }
+    }
+    
+    private func setTableView() {
+        tableView = UITableView(frame: CGRect(x: 150, y: 200, width: 150, height: 300))
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
+        tableView.dataSource = self
+        //myTableView.delegate = self
+        tableView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        tableView.isHidden = true
+        self.addSubview(tableView)
+    }
+    
+    @objc public func buttonMore(_ sender:UIButton!)  {
+        self.tableView.isHidden = !self.tableView.isHidden
+    }
+
     
     public func chooseSizeButton(buttons: [UIButton], position: Position, sizeButtons: CGFloat...) {
         
        // var position = Position.self
         var gap: CGFloat = 0.0
         var count: Int = 0
+        var addBullshit: CGFloat = 0.0
         
         if position == .BOTTOM || position == .TOP {
             for button in buttons {
-                var previousButton = buttons.before(button)
+                let previousButton = buttons.before(button)
                 
-                print(button.frame.size.width)
-                button.frame = CGRect(x: previousButton?.frame.width ?? 0 + gap, y: 0, width: setButtonSizeWidth(buttonWidth: sizeButtons[count]), height: 50)
+                button.frame = CGRect(x: (previousButton?.frame.size.width ?? 0) + gap + addBullshit, y: 0, width: ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])), height: 50)
                 
-                print("width ", setButtonSizeWidth(buttonWidth: sizeButtons[count]))
+                print("width ", ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])))
                 print("x ", gap)
                 
                 gap = 0.1
-                
                 count += 1
+                addBullshit += previousButton?.frame.size.width ?? 0
+
                 buttons[0].backgroundColor = .yellow
                 buttons[1].backgroundColor = .orange
                 buttons[2].backgroundColor = .purple
-                //buttons[3].backgroundColor = .brown
+                buttons[3].backgroundColor = .brown
 
                 contentView.addSubview(button)
             }
@@ -228,14 +268,25 @@ public class TabBar : UIView {
         return screensizeHeight * buttonHeight
     }
     
-    public func addButtonToTabBar(buttons: [UIButton]) {
-        for button in buttons {
-            button.backgroundColor = .yellow
-            
-            button.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-            
-            contentView.addSubview(button)
+    private func addButtonToTabBar(sizeTabBar: CGFloat) -> [UIButton] {
+        var sizeButton: CGFloat = 0
+        var i: Int = 0
+        for _ in 0..<self.buttons.count {
+            self.buttons[i].frame = CGRect(x: 0, y: 0, width: 100, height: 50)
+            sizeButton += self.buttons[i].frame.size.width
+            if(sizeButton > sizeTabBar) {
+                self.arrayButtonDeleted.append(self.buttons[i])
+                if let index = self.buttons.index(of: self.buttons[i]) {
+                    self.buttons.remove(at: index)
+                    i = index
+                }
+            } else {
+                i += 1
+            }
         }
+        self.changePlaceButton()
+        self.setTableView()
+        return self.buttons
     }
     
     public func fixWidthButton(button: UIButton, width: CGFloat) {
@@ -289,5 +340,22 @@ extension BidirectionalCollection where Iterator.Element: Equatable {
             }
         }
         return nil
+    }
+}
+
+extension TabBar: UITableViewDataSource{
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.arrayButtonDeleted.count
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
+        if indexPath.row < self.arrayButtonDeleted.count {
+            cell.contentView.addSubview(self.arrayButtonDeleted[indexPath.row])
+        } else {
+            print("no view at index")
+        }
+        cell.backgroundColor = UIColor.gray.withAlphaComponent(0)
+        return cell
     }
 }
