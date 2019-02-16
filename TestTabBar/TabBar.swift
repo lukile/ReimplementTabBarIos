@@ -113,7 +113,7 @@ public class TabBar : UIView {
             buttons.append(UIButton())
         }
         
-        self.addButtonToTabBar(sizeTabBar: screensizeWidth)
+        let newButton = self.addButtonToTabBar(sizeTabBar: screensizeWidth)
         
         return buttons
         
@@ -166,9 +166,6 @@ public class TabBar : UIView {
                 
                 button.frame = CGRect(x: (previousButton?.frame.size.width ?? 0) + gap + addBullshit, y: 0, width: ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])), height: 50)
                 
-                print("width ", ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])))
-                print("x ", gap)
-                
                 gap = 0.1
                 count += 1
                 addBullshit += previousButton?.frame.size.width ?? 0
@@ -185,77 +182,65 @@ public class TabBar : UIView {
             for button in buttons {
                 let previousButton = buttons.before(button)
                
-                print("previous : ", previousButton?.frame.height)
-                print("gap : ", gap)
-                
-                 button.frame = CGRect(x: 0, y: previousButton?.frame.height ?? 20 + gap, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
-                
-                print("height : ", button.frame.height)
-
+                 button.frame = CGRect(x: 0, y: (previousButton?.frame.height ?? 30) + gap + addBullshit, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
                 
                 gap = 0.1
-                
                 count += 1
+                addBullshit += previousButton?.frame.height ?? 30
+                
                 buttons[0].backgroundColor = .yellow
                 buttons[1].backgroundColor = .orange
                 buttons[2].backgroundColor = .purple
                 buttons[3].backgroundColor = .brown
-                buttons[4].backgroundColor = .green
-                buttons[5].backgroundColor = .cyan
-
-                
+          
                 contentView.addSubview(button)
             }
-            print("button 2 : ", buttons[1].frame.height)
         }
     }
     
     public func addImageView(buttons: [UIButton], position: Position, icone: String...){
         var count: Int = 0
+        var addBullshit: CGFloat = 0.0
+        
         if position == .BOTTOM || position == .TOP {
             var gap: CGFloat = 0.0
 
             for button in buttons {
                 let previous = buttons.before(button)
                 
-                print ("previous : ", previous!.frame.size.width as CGFloat)
-                
-                let buttonWidth = button.frame.size.width
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 imageView.image = image
               
-                imageView.frame = CGRect(x: buttonWidth + gap, y: 0, width: (image?.size.width)!, height: 50)
+                imageView.frame = CGRect(x: (previous?.frame.size.width ?? 0) + gap + addBullshit, y: 0, width: (image?.size.width)!, height: 50)
+                
+                gap += 0.1
+                count += 1
+                addBullshit += previous?.frame.size.width ?? 0
                 
                 setDefaultWidthFrame(imageView: imageView, button: button, image: image)
                 button.addSubview(imageView)
-
-                gap += 0.1
-                
-             
-                count += 1
+   
             }
         } else if position == .LEFT || position == .RIGHT {
-            var gap: CGFloat = 0.0
-            
             for button in buttons {
                 let previousButton = buttons.before(button)
                 
-                print("previous : ", previousButton?.frame.height)
-                
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
+                
+                imageView.backgroundColor = .cyan
                 imageView.image = image
                 
-                imageView.frame = CGRect(x: 0, y: previousButton?.frame.height ?? -20 + gap, width: 60, height: (image?.size.height)!)
+                let halfImageHeight = (image?.size.height)! / 2
+                let halfButtonHeight = button.frame.height / 2
                 
-                setDefaultHeightFrame(imageView: imageView, buttonHeight: previousButton?.frame.height ?? 20, image: image)
-                
-                button.addSubview(imageView)
-                
-                gap += 0.1
+                imageView.frame = CGRect(x: 0, y: halfButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
                 
                 count += 1
+            
+                //setDefaultHeightFrame(imageView: imageView, buttonHeight: previousButton?.frame.height ?? 20, image: image)
+                button.addSubview(imageView)
             }
         }
     }
@@ -305,6 +290,10 @@ public class TabBar : UIView {
     }
     
     private func setDefaultWidthFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
+        
+        print("image View size : ", imageView.frame.size)
+        print("button size : ", button.frame.size)
+        
         if(imageView.frame.maxX > button.frame.size.width || imageView.frame.minX < 0) {
             imageView.frame = CGRect(x: 0, y: 0, width: button.frame.size.width, height: (image?.size.height)!)
             
