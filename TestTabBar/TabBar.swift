@@ -152,8 +152,18 @@ public class TabBar : UIView {
         self.tableView.isHidden = !self.tableView.isHidden
     }
 
+    public func getOrientationDevice() {
+        if UIDevice.current.orientation.isLandscape {
+            print("Landscape")
+            
+        } else {
+            print("Portrait")
+        }
+    }
+  
     
     public func chooseSizeButton(buttons: [UIButton], position: Position, sizeButtons: CGFloat...) {
+        
         
        // var position = Position.self
         var gap: CGFloat = 0.0
@@ -224,7 +234,7 @@ public class TabBar : UIView {
             }
         } else if position == .LEFT || position == .RIGHT {
             for button in buttons {
-                let previousButton = buttons.before(button)
+                //let previousButton = buttons.before(button)
                 
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
@@ -239,11 +249,24 @@ public class TabBar : UIView {
                 
                 count += 1
             
-                //setDefaultHeightFrame(imageView: imageView, buttonHeight: previousButton?.frame.height ?? 20, image: image)
+                setDefaultHeightFrame(imageView: imageView, button: button, image: image)
                 button.addSubview(imageView)
             }
         }
     }
+    
+        public func viewWillTransition(to: CGSize, with: UIViewControllerTransitionCoordinator) {
+            //super.viewWillTransition(to: size, with: coordinator)
+            if UIDevice.current.orientation.isLandscape {
+                print("Landscape")
+                
+            } else {
+                print("Portrait")
+                
+            }
+        }
+        
+    
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
         return screensizeWidth * buttonWidth
@@ -303,9 +326,9 @@ public class TabBar : UIView {
         }
     }
     
-    private func setDefaultHeightFrame(imageView: UIImageView, buttonHeight: CGFloat, image: UIImage?) {
-        if(imageView.frame.maxY > buttonHeight || imageView.frame.minY < 0) {
-            imageView.frame = CGRect(x: 0, y: buttonHeight - 50, width: 60, height: (image?.size.height)!)
+    private func setDefaultHeightFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
+        if(imageView.frame.maxY > button.frame.size.height || imageView.frame.minY < 0) {
+            imageView.frame = CGRect(x: 0, y: button.frame.size.height - 10, width: 60, height: (image?.size.height)!)
             
             print("image view is not inside button, default value assigned")
         } else {
@@ -347,4 +370,8 @@ extension TabBar: UITableViewDataSource{
         cell.backgroundColor = UIColor.gray.withAlphaComponent(0)
         return cell
     }
+    
+    
 }
+
+

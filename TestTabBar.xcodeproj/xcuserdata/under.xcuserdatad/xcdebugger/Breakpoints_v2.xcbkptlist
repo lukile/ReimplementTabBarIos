@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TestTabBar/TabBar.swift"
-            timestampString = "572020871.16935"
+            timestampString = "572044481.262506"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "244"
-            endingLineNumber = "244"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "addImageView(buttons:position:icone:)"
             landmarkType = "7">
          </BreakpointContent>

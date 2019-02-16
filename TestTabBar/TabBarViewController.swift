@@ -22,6 +22,8 @@ public class TabBarViewController: UIViewController {
         let buttons = tabBar.selectNumberOfButton(numberButton: 4)
         tabBar.chooseSizeButton(buttons: buttons, position: position, sizeButtons: 0.1, 0.3, 0.2, 0.1)
         tabBar.addImageView(buttons: buttons, position: position, icone: "home", "profile", "info", "folder")
+        
+        
         //tabBar.addButtonToTabBar(buttons: buttons)
         
 
@@ -32,6 +34,10 @@ public class TabBarViewController: UIViewController {
     
     override public func loadView() {
         self.view = TabBar(frame: UIScreen.main.bounds)
+    }
+    
+    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        tabBar.getOrientationDevice()
     }
     
 }
