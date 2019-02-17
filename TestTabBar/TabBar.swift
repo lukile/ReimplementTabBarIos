@@ -139,10 +139,27 @@ public class TabBar : UIView {
         self.buttons.append(buttonMore)
         self.arrayButtonDeleted.insert(lastButton, at: 0)
         
+        var total: CGFloat = 0.0
+        
         for button in self.buttons {
             self.contentView.addSubview(button)
+            total += button.frame.size.width
         }
+        
+        print("total : ", total)
     }
+    
+    /*public func getButtonSize(buttons: [UIButton]) -> Bool {
+        var total: CGFloat = 0.0
+        var screenOrientation =
+        
+        for button in buttons {
+            
+            total += button.frame.size.width
+        }
+        
+        if total >
+    }*/
     
     private func setTableView() {
         tableView = UITableView(frame: CGRect(x: 150, y: 200, width: 150, height: 300))
@@ -158,12 +175,13 @@ public class TabBar : UIView {
         self.tableView.isHidden = !self.tableView.isHidden
     }
 
-    public func getOrientationDevice() {
+    public func getOrientationDevice() -> Bool {
         if UIDevice.current.orientation.isLandscape {
             print("Landscape")
-            
+            return true
         } else {
             print("Portrait")
+            return false
         }
     }
   
