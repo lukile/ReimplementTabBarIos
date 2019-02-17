@@ -25,6 +25,12 @@ public class TabBar : UIView {
     
     let screensizeWidth = UIScreen.main.bounds.width
     let screensizeHeight = UIScreen.main.bounds.height
+    
+    
+    let colorPressed = UIColor(rgb: 0xD7BBC5)
+    let colorNotPressed = UIColor(rgb: 0x235678)
+    
+    var buttonsColor: [UIButton] = [UIButton]()
 
     
     override init(frame: CGRect) {
@@ -180,11 +186,12 @@ public class TabBar : UIView {
                 count += 1
                 addBullshit += previousButton?.frame.size.width ?? 0
 
-                buttons[0].backgroundColor = .yellow
-                buttons[1].backgroundColor = .orange
-                buttons[2].backgroundColor = .purple
-                buttons[3].backgroundColor = .brown
-
+                for i in 0..<self.buttons.count{
+                    
+                    buttons[i].addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
+                    buttons[i].backgroundColor = colorNotPressed
+                }
+            
                 contentView.addSubview(button)
             }
             
@@ -198,10 +205,11 @@ public class TabBar : UIView {
                 count += 1
                 addBullshit += previousButton?.frame.height ?? 30
                 
-                buttons[0].backgroundColor = .yellow
-                buttons[1].backgroundColor = .orange
-                buttons[2].backgroundColor = .purple
-                buttons[3].backgroundColor = .brown
+                for i in 0..<self.buttons.count{
+                    
+                    buttons[i].addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
+                    buttons[i].backgroundColor = colorNotPressed
+                }
           
                 contentView.addSubview(button)
             }
@@ -335,6 +343,60 @@ public class TabBar : UIView {
             print("image view size ok")
         }
     }
+    
+    @objc func btnClick(_ sender: UIButton){
+        let btn = sender
+        var imageView: UIImageView? = nil
+        var imageViewPrevious: UIImageView? = nil
+        buttonsColor.append(btn)
+        
+        print(sender.isSelected)
+        if(!sender.isSelected){
+            UIView.beginAnimations("test", context: nil)
+            UIView.setAnimationTransition(.none, for: self, cache: false)
+            UIView.setAnimationDuration(0.1)
+            btn.backgroundColor = self.colorPressed
+            btn.subviews.forEach { img in
+                imageView = img as! UIImageView
+                imageView!.setImageColor(color: colorNotPressed)
+            }
+            //imageView = btn.subviews.first as! UIImageView
+            UIView.commitAnimations()
+            print("NOT SELECTED")
+            btn.isSelected = true
+            print(buttonsColor.count)
+            if(buttonsColor.count > 1 && buttonsColor.count <= 2){
+                let previousBtn = buttonsColor.first
+                previousBtn?.backgroundColor = colorNotPressed
+                previousBtn?.subviews.forEach { img in
+                    imageViewPrevious = img as! UIImageView
+                    imageViewPrevious!.setImageColor(color: UIColor.black)
+                }
+                previousBtn?.imageView?.setImageColor(color: UIColor.black)
+                previousBtn?.isSelected = false
+                buttonsColor.remove(at: 0)
+            }
+        } else {
+            print("SELECTED")
+        }
+        
+        
+        
+        /*
+         UIView.animate(withDuration: 1.0, animations: {
+         
+         print("HEllo !!!")
+         btn.frame = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: 10, height: 10)
+         }){(success: Bool)in
+         if(success){
+         print("SUCCESS !!!")
+         //btn.frame = bounds
+         }
+         
+         
+         }
+         */
+    }
 }
 
 extension BidirectionalCollection where Iterator.Element: Equatable {
@@ -372,6 +434,61 @@ extension TabBar: UITableViewDataSource{
     }
     
     
+}
+extension UIColor {
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    
+    convenience init(rgb: Int) {
+        self.init(
+            red: (rgb >> 16) & 0xFF,
+            green: (rgb >> 8) & 0xFF,
+            blue: rgb & 0xFF
+        )
+    }
+}
+
+class CustomUIView: UIView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = UIColor.blue
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        print("touch start")
+        backgroundColor = UIColor.red
+        
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        print("touch ended")
+        backgroundColor = UIColor.blue
+        
+    }
+    
+}
+extension UIImageView {
+    func setImageColor(color: UIColor) {
+        let templateImage = self.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        self.image = templateImage
+        self.tintColor = color
+    }
 }
 
 
