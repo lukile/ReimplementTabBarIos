@@ -1,0 +1,11 @@
+osx_image: xcode10.1
+language: objective-c
+branches:
+  only:
+    - createLibrary
+notifications:
+  email: false
+before_install:
+  - gem install bundler
+  - bundle install
+script: bundle exec fastlane release
