@@ -118,9 +118,6 @@ public class TabBar : UIView {
         for _ in 1...numberButton {
             buttons.append(UIButton())
         }
-        
-        let newButton = self.addButtonToTabBar(sizeTabBar: screensizeWidth)
-        
         return buttons
         
     }
@@ -145,8 +142,6 @@ public class TabBar : UIView {
             self.contentView.addSubview(button)
             total += button.frame.size.width
         }
-        
-        print("total : ", total)
     }
     
     /*public func getButtonSize(buttons: [UIButton]) -> Bool {
@@ -175,7 +170,7 @@ public class TabBar : UIView {
         self.tableView.isHidden = !self.tableView.isHidden
     }
 
-    public func getOrientationDevice() -> Bool {
+    public func isLandscape() -> Bool {
         if UIDevice.current.orientation.isLandscape {
             print("Landscape")
             return true
@@ -188,17 +183,21 @@ public class TabBar : UIView {
     
     public func chooseSizeButton(buttons: [UIButton], position: Position, sizeButtons: CGFloat...) {
         
-        
-       // var position = Position.self
+        var total: CGFloat = 0.0
+       
         var gap: CGFloat = 0.0
         var count: Int = 0
         var addBullshit: CGFloat = 0.0
+        
+        var buttonsToDelete = [UIButton]()
         
         if position == .BOTTOM || position == .TOP {
             for button in buttons {
                 let previousButton = buttons.before(button)
                 
                 button.frame = CGRect(x: (previousButton?.frame.size.width ?? 0) + gap + addBullshit, y: 0, width: ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])), height: 50)
+                
+                total += ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count]))
                 
                 gap = 0.1
                 count += 1
@@ -210,14 +209,21 @@ public class TabBar : UIView {
                     buttons[i].backgroundColor = colorNotPressed
                 }
             
+                
+                if(isLandscape()) {
+                    addButtonToTabBar(sizeTabBar: screensizeWidth, sizeButton: total)
+                }
+                
                 contentView.addSubview(button)
             }
             
        } else if position == .RIGHT || position == .LEFT {
             for button in buttons {
                 let previousButton = buttons.before(button)
-               
+             
                  button.frame = CGRect(x: 0, y: (previousButton?.frame.height ?? 30) + gap + addBullshit, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
+                
+                total += ceil(setButtonHeight(buttonHeight: sizeButtons[count]))
                 
                 gap = 0.1
                 count += 1
@@ -228,15 +234,47 @@ public class TabBar : UIView {
                     buttons[i].addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
                     buttons[i].backgroundColor = colorNotPressed
                 }
-          
-                contentView.addSubview(button)
+                print("total ", total)
+                
+                if(!isLandscape()) {
+                    if(total < screensizeHeight) {
+                        print("ok")
+
+                        contentView.addSubview(button)
+           
+                    } else {
+                        var butt = [UIButton]()
+                        
+                        let previousButton = buttons.before(button)
+                        
+                        print("previous : ", previousButton)
+                        
+                        butt.append(previousButton!)
+                        addImageView(buttons: butt, position: position, icone: "more")
+                        
+                        print("total > screensizeHeight")
+                        buttonsToDelete.append(button)
+                        print("button to delete : ", buttonsToDelete.count)
+                        
+                        
+                        
+                        //addButtonToTabBar(sizeTabBar: screensizeHeight, sizeButton: total)
+                    }
+
+                }
+                
+                //contentView.addSubview(button)
+
             }
+            
         }
     }
     
     public func addImageView(buttons: [UIButton], position: Position, icone: String...){
         var count: Int = 0
         var addBullshit: CGFloat = 0.0
+        
+        print(icone)
         
         if position == .BOTTOM || position == .TOP {
             var gap: CGFloat = 0.0
@@ -292,7 +330,26 @@ public class TabBar : UIView {
             }
         }
         
-    
+    private func checkButtonOnTabBar(buttons: [UIButton]) {
+        let screenHeight = UIScreen.main.bounds.height
+        
+        print("buttons count : ", buttons.count)
+        print("screen height : ", screenHeight)
+        
+        var total: CGFloat = 0.0
+        for button in buttons {
+            total += button.frame.size.height
+        }
+        
+        print("button total height : ", total)
+        
+        if(total > screenHeight) {
+            print("Too much button on tab bar")
+        } else if (total < screenHeight) {
+            print("Total button fit inside tab bar")
+        }
+        
+    }
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
         return screensizeWidth * buttonWidth
@@ -302,15 +359,20 @@ public class TabBar : UIView {
         return screensizeHeight * buttonHeight
     }
     
-    private func addButtonToTabBar(sizeTabBar: CGFloat) -> [UIButton] {
-        var sizeButton: CGFloat = 0
+    private func addButtonToTabBar(sizeTabBar: CGFloat, sizeButton: CGFloat) -> [UIButton] {
         var i: Int = 0
-        for _ in 0..<self.buttons.count {
-            self.buttons[i].frame = CGRect(x: 0, y: 0, width: 100, height: 50)
-            sizeButton += self.buttons[i].frame.size.width
+        print("size Button : ", sizeButton)
+        print("size height : ", sizeTabBar)
+        for button in buttons {
+           // self.buttons[i].frame = CGRect(x: 0, y: 0, width: 100, height: 50)
+           // sizeButton += self.buttons[i].frame.size.height
             if(sizeButton > sizeTabBar) {
-                self.arrayButtonDeleted.append(self.buttons[i])
-                if let index = self.buttons.index(of: self.buttons[i]) {
+                print("sizeButton > sizeTabBar")
+                self.arrayButtonDeleted.append(button)
+            
+                print("arrayButton deleted : ", arrayButtonDeleted)
+                
+                if let index = self.buttons.index(of: button) {
                     self.buttons.remove(at: index)
                     i = index
                 }
@@ -397,23 +459,6 @@ public class TabBar : UIView {
         } else {
             print("SELECTED")
         }
-        
-        
-        
-        /*
-         UIView.animate(withDuration: 1.0, animations: {
-         
-         print("HEllo !!!")
-         btn.frame = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: 10, height: 10)
-         }){(success: Bool)in
-         if(success){
-         print("SUCCESS !!!")
-         //btn.frame = bounds
-         }
-         
-         
-         }
-         */
     }
 }
 

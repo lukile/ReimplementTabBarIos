@@ -11,7 +11,6 @@
 		AA87216F220C2E9400771C6F /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA87216E220C2E9400771C6F /* Position.swift */; };
 		AA872199220C389F00771C6F /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA872196220C346500771C6F /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA8CA2EB21FC6AD800138916 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8CA2EA21FC6AD800138916 /* AppDelegate.swift */; };
-		AA8CA2ED21FC6AD800138916 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8CA2EC21FC6AD800138916 /* ViewController.swift */; };
 		AA8CA2F221FC6AD900138916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA8CA2F121FC6AD900138916 /* Assets.xcassets */; };
 		AA8CA2F521FC6AD900138916 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA8CA2F321FC6AD900138916 /* LaunchScreen.storyboard */; };
 		AAEC67ED21FDE6710050090A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEC67EC21FDE6710050090A /* TabBarViewController.swift */; };
@@ -73,7 +72,6 @@
 		AA872196220C346500771C6F /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		AA8CA2E721FC6AD800138916 /* TestTabBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestTabBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA8CA2EA21FC6AD800138916 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AA8CA2EC21FC6AD800138916 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		AA8CA2F121FC6AD900138916 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA8CA2F421FC6AD900138916 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA8CA2F621FC6AD900138916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 				AA87216E220C2E9400771C6F /* Position.swift */,
 				AA87216C220C2E5D00771C6F /* TabBar.swift */,
 				AA8CA2EA21FC6AD800138916 /* AppDelegate.swift */,
-				AA8CA2EC21FC6AD800138916 /* ViewController.swift */,
 				AA8CA2F121FC6AD900138916 /* Assets.xcassets */,
 				AA8CA2F321FC6AD900138916 /* LaunchScreen.storyboard */,
 				AA8CA2F621FC6AD900138916 /* Info.plist */,
@@ -255,7 +252,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA8CA2ED21FC6AD800138916 /* ViewController.swift in Sources */,
 				AAEC67ED21FDE6710050090A /* TabBarViewController.swift in Sources */,
 				AA8CA2EB21FC6AD800138916 /* AppDelegate.swift in Sources */,
 				AA87216F220C2E9400771C6F /* Position.swift in Sources */,
