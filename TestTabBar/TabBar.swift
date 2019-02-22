@@ -22,6 +22,7 @@ public class TabBar : UIView {
     private var numberButtons = [Int]()
     private var arrayButtonDeleted: [UIButton] = []
     private var tableView: UITableView!
+    private var total = CGFloat()
     
     let screensizeWidth = UIScreen.main.bounds.width
     let screensizeHeight = UIScreen.main.bounds.height
@@ -119,7 +120,6 @@ public class TabBar : UIView {
             buttons.append(UIButton())
         }
         return buttons
-        
     }
     
     private func changePlaceButton() {
@@ -143,18 +143,7 @@ public class TabBar : UIView {
             total += button.frame.size.width
         }
     }
-    
-    /*public func getButtonSize(buttons: [UIButton]) -> Bool {
-        var total: CGFloat = 0.0
-        var screenOrientation =
-        
-        for button in buttons {
-            
-            total += button.frame.size.width
-        }
-        
-        if total >
-    }*/
+
     
     private func setTableView() {
         tableView = UITableView(frame: CGRect(x: 150, y: 200, width: 150, height: 300))
@@ -234,47 +223,23 @@ public class TabBar : UIView {
                     buttons[i].addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
                     buttons[i].backgroundColor = colorNotPressed
                 }
-                print("total ", total)
-                
-                if(!isLandscape()) {
-                    if(total < screensizeHeight) {
-                        print("ok")
-
-                        contentView.addSubview(button)
-           
-                    } else {
-                        var butt = [UIButton]()
-                        
-                        let previousButton = buttons.before(button)
-                        
-                        print("previous : ", previousButton)
-                        
-                        butt.append(previousButton!)
-                        addImageView(buttons: butt, position: position, icone: "more")
-                        
-                        print("total > screensizeHeight")
-                        buttonsToDelete.append(button)
-                        print("button to delete : ", buttonsToDelete.count)
-                        
-                        
-                        
-                        //addButtonToTabBar(sizeTabBar: screensizeHeight, sizeButton: total)
-                    }
-
-                }
-                
-                //contentView.addSubview(button)
-
+                contentView.addSubview(button)
             }
-            
         }
     }
     
+    private func deleteImageFromImageView(imageView: UIImageView) {
+        imageView.image = nil
+    }
+    
     public func addImageView(buttons: [UIButton], position: Position, icone: String...){
+        var total: CGFloat = 0.0
         var count: Int = 0
         var addBullshit: CGFloat = 0.0
         
-        print(icone)
+        var buttonsExceedTabBar = [UIButton]()
+        
+        var previousButton = UIButton()
         
         if position == .BOTTOM || position == .TOP {
             var gap: CGFloat = 0.0
@@ -296,10 +261,9 @@ public class TabBar : UIView {
                 button.addSubview(imageView)
    
             }
+            
         } else if position == .LEFT || position == .RIGHT {
             for button in buttons {
-                //let previousButton = buttons.before(button)
-                
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 
@@ -314,8 +278,78 @@ public class TabBar : UIView {
                 count += 1
             
                 setDefaultHeightFrame(imageView: imageView, button: button, image: image)
-                button.addSubview(imageView)
+                
+                total += ceil(button.frame.size.height)
+                
+                
+                if(total > screensizeHeight) {
+                    previousButton = buttons.before(button)!
+                    
+                    if(((total - previousButton.frame.height) + previousButton.frame.height) > screensizeHeight){
+                    buttonsExceedTabBar.append(button)
+                    buttonsExceedTabBar.append(previousButton)
+                        
+                        print(buttonsExceedTabBar.count)
+                   // print("total - previousButton.frame.height ", total - previousButton.frame.height)
+
+                   // buttonsExceedTabBar.append(previousButton)
+                    
+                    print("previous ", previousButton.frame.height)
+                    
+                    previousButton.imageView?.removeFromSuperview()
+                    
+
+                    
+                    /*print("previousButton.frame.size.height ", previousButton)
+                    
+                     print("previousButton width ", previousButton.frame.width)
+                    
+                    print("previousButton height ", previousButton.frame.height)
+                    
+                    print("previous x ", previousButton.frame.maxX)
+                    
+                    print("previous y ", previousButton.frame.maxY)
+                    
+                    
+                    
+                    print("previousPreviousButton.frame.size.height ", previousPreviousButton as Any)
+                    
+                    print("previousPreviousButton width ", previousPreviousButton!.frame.width)
+                    
+                    print("previousPreviousButton height ", previousPreviousButton!.frame.height)
+                    
+                    print("previousPreviousButton x ", previousPreviousButton!.frame.maxX)
+                    
+                    print("previousPreviousButton y ", previousPreviousButton!.frame.maxY)*/
+                    
+                    //previousButton.frame = CGRect(x: 5, y: previousButton.frame.maxY + previousButton.frame.height - 10, width: previousButton.frame.width, height: previousButton.frame.height)
+                    
+                   // buttonMore = previousButton
+                    
+                   // previousButton.addSubview(imageView!)
+                    //buttonMore.addSubview(imageView)
+                    
+                   // previousButton = buttonMore
+                    
+                    //button.addSubview(previousButton)
+                    
+                 
+                   // print("nextButton?.frame.height ", nextButton?.frame.height)
+                  //  print("nextButton?.frame.height + total ", (nextButton?.frame.height)! + total)
+                    
+                    //let imageView = UIImageView(image: UIImage(named: "more"))
+                    
+                    //previousButton.addSubview(imageView)
+                    //contentView.addSubview(button)
+                    }
+                } else {
+                    button.addSubview(imageView)
+
+                }
+                
             }
+            
+            print("TOTAL ", total)
         }
     }
     
@@ -474,6 +508,20 @@ extension BidirectionalCollection where Iterator.Element: Equatable {
                 return nil
             } else {
                 return self[index(before:itemIndex)]
+            }
+        }
+        return nil
+    }
+    
+    func after(_ item: Element, loop: Bool = false) -> Element? {
+        if let itemIndex = self.index(of: item) {
+            let lastItem: Bool = (index(after:itemIndex) == endIndex)
+            if loop && lastItem {
+                return self.first
+            } else if lastItem {
+                return nil
+            } else {
+                return self[index(after:itemIndex)]
             }
         }
         return nil
