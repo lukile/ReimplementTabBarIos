@@ -109,8 +109,6 @@ public class TabBar : UIView {
                 make.bottom.equalTo(self)
                 make.left.equalTo(self)
             }
-        //default:
-          //  position = position.BOTTOM
         }
         return position
     }
@@ -176,7 +174,7 @@ public class TabBar : UIView {
        
         var gap: CGFloat = 0.0
         var count: Int = 0
-        var addBullshit: CGFloat = 0.0
+        var previousFrameSize: CGFloat = 0.0
         
         var buttonsToDelete = [UIButton]()
         
@@ -184,13 +182,13 @@ public class TabBar : UIView {
             for button in buttons {
                 let previousButton = buttons.before(button)
                 
-                button.frame = CGRect(x: (previousButton?.frame.size.width ?? 0) + gap + addBullshit, y: 0, width: ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])), height: 50)
+                button.frame = CGRect(x: (previousButton?.frame.size.width ?? 0) + gap + previousFrameSize, y: 0, width: ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])), height: 50)
                 
                 total += ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count]))
                 
                 gap = 0.1
                 count += 1
-                addBullshit += previousButton?.frame.size.width ?? 0
+                previousFrameSize += previousButton?.frame.size.width ?? 0
 
                 for i in 0..<self.buttons.count{
                     
@@ -210,13 +208,13 @@ public class TabBar : UIView {
             for button in buttons {
                 let previousButton = buttons.before(button)
              
-                 button.frame = CGRect(x: 0, y: (previousButton?.frame.height ?? 30) + gap + addBullshit, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
+                 button.frame = CGRect(x: 0, y: (previousButton?.frame.height ?? 30) + gap + previousFrameSize, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
                 
                 total += ceil(setButtonHeight(buttonHeight: sizeButtons[count]))
                 
                 gap = 0.1
                 count += 1
-                addBullshit += previousButton?.frame.height ?? 30
+                previousFrameSize += previousButton?.frame.height ?? 30
                 
                 for i in 0..<self.buttons.count{
                     
@@ -281,72 +279,43 @@ public class TabBar : UIView {
                 
                 total += ceil(button.frame.size.height)
                 
+                let nextButton = buttons.after(button)
+                let nextNextButton = buttons.after(nextButton!)
                 
-                if(total > screensizeHeight) {
-                    previousButton = buttons.before(button)!
+                if((nextNextButton) != nil) {
+                    let nextButtonHeight = ceil(CGFloat((nextButton?.frame.height)!))
+                    let nextNextButtonHeight = ceil(CGFloat((nextNextButton?.frame.height)!))
                     
-                    if(((total - previousButton.frame.height) + previousButton.frame.height) > screensizeHeight){
-                    buttonsExceedTabBar.append(button)
-                    buttonsExceedTabBar.append(previousButton)
-                        
-                        print(buttonsExceedTabBar.count)
-                   // print("total - previousButton.frame.height ", total - previousButton.frame.height)
-
-                   // buttonsExceedTabBar.append(previousButton)
-                    
-                    print("previous ", previousButton.frame.height)
-                    
-                    previousButton.imageView?.removeFromSuperview()
-                    
-
-                    
-                    /*print("previousButton.frame.size.height ", previousButton)
-                    
-                     print("previousButton width ", previousButton.frame.width)
-                    
-                    print("previousButton height ", previousButton.frame.height)
-                    
-                    print("previous x ", previousButton.frame.maxX)
-                    
-                    print("previous y ", previousButton.frame.maxY)
-                    
-                    
-                    
-                    print("previousPreviousButton.frame.size.height ", previousPreviousButton as Any)
-                    
-                    print("previousPreviousButton width ", previousPreviousButton!.frame.width)
-                    
-                    print("previousPreviousButton height ", previousPreviousButton!.frame.height)
-                    
-                    print("previousPreviousButton x ", previousPreviousButton!.frame.maxX)
-                    
-                    print("previousPreviousButton y ", previousPreviousButton!.frame.maxY)*/
-                    
-                    //previousButton.frame = CGRect(x: 5, y: previousButton.frame.maxY + previousButton.frame.height - 10, width: previousButton.frame.width, height: previousButton.frame.height)
-                    
-                   // buttonMore = previousButton
-                    
-                   // previousButton.addSubview(imageView!)
-                    //buttonMore.addSubview(imageView)
-                    
-                   // previousButton = buttonMore
-                    
-                    //button.addSubview(previousButton)
-                    
-                 
-                   // print("nextButton?.frame.height ", nextButton?.frame.height)
-                  //  print("nextButton?.frame.height + total ", (nextButton?.frame.height)! + total)
-                    
-                    //let imageView = UIImageView(image: UIImage(named: "more"))
-                    
-                    //previousButton.addSubview(imageView)
-                    //contentView.addSubview(button)
+                    if((nextNextButtonHeight + total) < screensizeHeight - 30) {
+                         button.addSubview(imageView)
                     }
+                    if ((nextNextButtonHeight + nextButtonHeight + total) > screensizeHeight - 30) {
+                        
+                        let image = UIImage(named: "more")
+                        let imageView = UIImageView(image: image)
+                        let nextButtonHeight =  nextButton!.frame.height / 2
+                        
+                        imageView.frame = CGRect(x: 0, y: nextButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
+                        
+                        print(nextButton!.frame.size)
+                        nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+                        self.setTableView()
+                        
+                        nextButton?.addSubview(imageView)
+                        buttonsExceedTabBar.append(button)
+                        for buttonExceed in buttonsExceedTabBar {
+                            let cell = UITableViewCell()
+                            let image = UIImage(named: "profile")
+                            let imageView = UIImageView(image: image)
+                            cell.addSubview(imageView)
+                        }
+                        print(buttonsExceedTabBar.count)
+                    }
+                    print("there is two buttons more")
                 } else {
-                    button.addSubview(imageView)
-
+                    print("no button after")
+                    break
                 }
-                
             }
             
             print("TOTAL ", total)
@@ -383,6 +352,13 @@ public class TabBar : UIView {
             print("Total button fit inside tab bar")
         }
         
+    }
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->   UITableViewCell {
+        let cell = UITableViewCell()
+        let label = UILabel()
+        label.text = "Hello Man"
+        cell.addSubview(label)
+        return cell
     }
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
