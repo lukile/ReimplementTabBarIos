@@ -14,6 +14,7 @@ public class TabBarViewController: UIViewController {
   
     override public func viewDidLoad() {
         super.viewDidLoad()
+
         view.backgroundColor = .white
     
         //tabBar.setContainer(container: self)

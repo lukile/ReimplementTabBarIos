@@ -19,6 +19,7 @@ public class TabBar : UIView {
     private var position: Position?
     private var bgColor: UIColor?
     private var buttons = [UIButton]()
+    private var buttonsExceedTabBar = [UIButton]()
     private var numberButtons = [Int]()
     private var arrayButtonDeleted: [UIButton] = []
     private var tableView: UITableView!
@@ -144,10 +145,10 @@ public class TabBar : UIView {
 
     
     private func setTableView() {
-        tableView = UITableView(frame: CGRect(x: 150, y: 200, width: 150, height: 300))
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
+        tableView = UITableView(frame: CGRect(x: 150, y: 200, width: 50, height: 300))
+        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
         tableView.dataSource = self
-        //myTableView.delegate = self
+        tableView.delegate = self
         tableView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
         tableView.isHidden = true
         self.addSubview(tableView)
@@ -235,7 +236,7 @@ public class TabBar : UIView {
         var count: Int = 0
         var addBullshit: CGFloat = 0.0
         
-        var buttonsExceedTabBar = [UIButton]()
+//        var buttonsExceedTabBar = [UIButton]()
         
         var previousButton = UIButton()
         
@@ -352,13 +353,6 @@ public class TabBar : UIView {
             print("Total button fit inside tab bar")
         }
         
-    }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->   UITableViewCell {
-        let cell = UITableViewCell()
-        let label = UILabel()
-        label.text = "Hello Man"
-        cell.addSubview(label)
-        return cell
     }
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
@@ -504,7 +498,7 @@ extension BidirectionalCollection where Iterator.Element: Equatable {
     }
 }
 
-extension TabBar: UITableViewDataSource{
+/*extension TabBar: UITableViewDataSource{
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.arrayButtonDeleted.count
     }
@@ -521,7 +515,7 @@ extension TabBar: UITableViewDataSource{
     }
     
     
-}
+}*/
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
@@ -570,6 +564,52 @@ class CustomUIView: UIView {
     }
     
 }
+extension TabBar: UITableViewDelegate, UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       // button.addSubview(imageView)
+
+        //let buttonExceedTabBarRow = buttonsExceedTabBar[indexPath.row]
+
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        let cell = CustomCell(frame: CGRect(x: 0, y: 0, width: 50, height: 20), icone: "profile")
+        
+       // let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath);
+       
+        //cell.textLabel?.text = "Hello"
+        cell.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        //cell.imageView?.image = UIImage(named: buttonExceedTabBarRow.imageView?.image)
+        return cell;
+    }
+}
+
+class CustomCell: UITableViewCell {
+    var cellButton = UIButton()
+    
+    init(frame: CGRect, icone: String) {
+        super.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell")
+
+        cellButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
+        let image = UIImage(named: icone)
+        let imageView = UIImageView(image: image)
+        imageView.image = image
+        cellButton.addSubview(imageView)
+        
+        addSubview(cellButton)
+
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
+
 extension UIImageView {
     func setImageColor(color: UIColor) {
         let templateImage = self.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
