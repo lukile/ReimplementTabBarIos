@@ -20,6 +20,7 @@ public class TabBar : UIView {
     private var bgColor: UIColor?
     private var buttons = [UIButton]()
     private var buttonsExceedTabBar = [UIButton]()
+    private var imageButtonExceed = [String]()
     private var numberButtons = [Int]()
     private var arrayButtonDeleted: [UIButton] = []
     private var tableView: UITableView!
@@ -145,8 +146,7 @@ public class TabBar : UIView {
 
     
     private func setTableView() {
-        tableView = UITableView(frame: CGRect(x: 150, y: 200, width: 50, height: 300))
-        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
+        tableView = UITableView(frame: CGRect(x: 60, y: 150, width: 50, height: 300))
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
@@ -234,7 +234,7 @@ public class TabBar : UIView {
     public func addImageView(buttons: [UIButton], position: Position, icone: String...){
         var total: CGFloat = 0.0
         var count: Int = 0
-        var addBullshit: CGFloat = 0.0
+        var previousFrame: CGFloat = 0.0
         
 //        var buttonsExceedTabBar = [UIButton]()
         
@@ -250,11 +250,11 @@ public class TabBar : UIView {
                 let imageView = UIImageView(image: image)
                 imageView.image = image
               
-                imageView.frame = CGRect(x: (previous?.frame.size.width ?? 0) + gap + addBullshit, y: 0, width: (image?.size.width)!, height: 50)
+                imageView.frame = CGRect(x: (previous?.frame.size.width ?? 0) + gap + previousFrame, y: 0, width: (image?.size.width)!, height: 50)
                 
                 gap += 0.1
                 count += 1
-                addBullshit += previous?.frame.size.width ?? 0
+                previousFrame += previous?.frame.size.width ?? 0
                 
                 setDefaultWidthFrame(imageView: imageView, button: button, image: image)
                 button.addSubview(imageView)
@@ -283,6 +283,9 @@ public class TabBar : UIView {
                 let nextButton = buttons.after(button)
                 let nextNextButton = buttons.after(nextButton!)
                 
+                let nextIcone = icone.after(icone[count])
+                let nextNextIcone = icone.after(nextIcone!)
+                
                 if((nextNextButton) != nil) {
                     let nextButtonHeight = ceil(CGFloat((nextButton?.frame.height)!))
                     let nextNextButtonHeight = ceil(CGFloat((nextNextButton?.frame.height)!))
@@ -291,26 +294,29 @@ public class TabBar : UIView {
                          button.addSubview(imageView)
                     }
                     if ((nextNextButtonHeight + nextButtonHeight + total) > screensizeHeight - 30) {
-                        
+                        print(button.frame.size.height)
                         let image = UIImage(named: "more")
                         let imageView = UIImageView(image: image)
                         let nextButtonHeight =  nextButton!.frame.height / 2
                         
                         imageView.frame = CGRect(x: 0, y: nextButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
-                        
-                        print(nextButton!.frame.size)
+                      
                         nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
-                        self.setTableView()
                         
+                          self.setTableView()
                         nextButton?.addSubview(imageView)
-                        buttonsExceedTabBar.append(button)
+                      //  buttonsExceedTabBar.append(nextButton!)
+                        buttonsExceedTabBar.append(nextNextButton!)
+                        
                         for buttonExceed in buttonsExceedTabBar {
-                            let cell = UITableViewCell()
-                            let image = UIImage(named: "profile")
-                            let imageView = UIImageView(image: image)
-                            cell.addSubview(imageView)
+                            print("buttonExceed.frame.height ", buttonExceed.frame.height)
                         }
-                        print(buttonsExceedTabBar.count)
+                     
+                        imageButtonExceed.append(nextNextIcone!)
+                 
+                        
+                        print("nextNextButton height ", nextNextButton?.frame.height)
+                        print("buttonsExceedTabBar.count ", buttonsExceedTabBar.count)
                     }
                     print("there is two buttons more")
                 } else {
@@ -318,8 +324,6 @@ public class TabBar : UIView {
                     break
                 }
             }
-            
-            print("TOTAL ", total)
         }
     }
     
@@ -405,10 +409,6 @@ public class TabBar : UIView {
     }
     
     private func setDefaultWidthFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
-        
-        print("image View size : ", imageView.frame.size)
-        print("button size : ", button.frame.size)
-        
         if(imageView.frame.maxX > button.frame.size.width || imageView.frame.minX < 0) {
             imageView.frame = CGRect(x: 0, y: 0, width: button.frame.size.width, height: (image?.size.height)!)
             
@@ -498,24 +498,6 @@ extension BidirectionalCollection where Iterator.Element: Equatable {
     }
 }
 
-/*extension TabBar: UITableViewDataSource{
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.arrayButtonDeleted.count
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
-        if indexPath.row < self.arrayButtonDeleted.count {
-            cell.contentView.addSubview(self.arrayButtonDeleted[indexPath.row])
-        } else {
-            print("no view at index")
-        }
-        cell.backgroundColor = UIColor.gray.withAlphaComponent(0)
-        return cell
-    }
-    
-    
-}*/
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
@@ -566,23 +548,21 @@ class CustomUIView: UIView {
 }
 extension TabBar: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return buttonsExceedTabBar.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       // button.addSubview(imageView)
-
-        //let buttonExceedTabBarRow = buttonsExceedTabBar[indexPath.row]
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        let imageButton = imageButtonExceed[indexPath.row]
+        
 
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        let cell = CustomCell(frame: CGRect(x: 0, y: 0, width: 50, height: 20), icone: "profile")
         
-       // let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath);
-       
-        //cell.textLabel?.text = "Hello"
-        cell.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
-        //cell.imageView?.image = UIImage(named: buttonExceedTabBarRow.imageView?.image)
-        return cell;
+        cell = CustomCell(frame: CGRect(x: 0, y: 0, width: 50, height: 0), icone: imageButton)
+        
+        cell!.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        
+        return cell!
     }
 }
 
@@ -592,7 +572,7 @@ class CustomCell: UITableViewCell {
     init(frame: CGRect, icone: String) {
         super.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell")
 
-        cellButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
+        cellButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 0))
         let image = UIImage(named: icone)
         let imageView = UIImageView(image: image)
         imageView.image = image
