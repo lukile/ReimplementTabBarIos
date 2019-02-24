@@ -245,6 +245,9 @@ public class TabBar : UIView {
         if position == .BOTTOM || position == .TOP {
             var gap: CGFloat = 0.0
 
+            var buttonMoreYet = false
+            var onlyTwoButton = true
+            
             for button in buttons {
                 let previous = buttons.before(button)
                 
@@ -258,9 +261,67 @@ public class TabBar : UIView {
                 count += 1
                 previousFrame += previous?.frame.size.width ?? 0
                 
+                total += ceil(button.frame.size.width)
                 setDefaultWidthFrame(imageView: imageView, button: button, image: image)
-                button.addSubview(imageView)
-   
+               // button.addSubview(imageView)
+            
+                let nextButton = buttons.after(button)
+            
+                if(nextButton != nil) {
+                    let nextNextButton = buttons.after(nextButton!)
+                    if((nextNextButton) != nil) {
+                        onlyTwoButton = false
+                        let nextButtonWidth = ceil(CGFloat((nextButton?.frame.width)!))
+                        let nextNextButtonWidth = ceil(CGFloat((nextNextButton?.frame.width)!))
+                        
+                        if((nextNextButtonWidth + total) < screensizeWidth) {
+                            button.addSubview(imageView)
+                        }
+          
+                        if ((nextNextButtonWidth + nextButtonWidth + total) > screensizeWidth) {
+                            if(buttonMoreYet == false) {
+                                let halfImageWidth = (image?.size.width)! / 2
+                                let halfButtonWidth = nextButton!.frame.width / 2
+                                
+                                let image = UIImage(named: "more")
+                                let imageView = UIImageView(image: image)
+                                
+                                print("image width ", image!.size.width)
+
+                                let imageWidth = image!.size.width
+                                print("nextButton.frame.width ", nextButton!.frame.width)
+                                
+                                imageView.frame = CGRect(x: halfButtonWidth - halfImageWidth, y: 0, width: (image?.size.width)!, height: 50)
+                                
+                                nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+                                
+                                nextButton?.addSubview(imageView)
+                                
+                                buttonMoreYet = true
+                            }
+                            buttonsExceedTabBar.append(nextNextButton!)
+                            imageButtonExceed.append(icone[count])
+                            
+                            /*if(nextButton != nil) {
+                                buttonsExceedTabBar.append(nextButton!)
+                                print("buttonsExceedTabBar.count ", buttonsExceedTabBar.count)
+                            } else {
+                                break
+                            }*/
+                        
+                            
+                            self.setTableView()
+                        }
+                    }
+                    if(onlyTwoButton) {
+                        button.addSubview(imageView)
+                    }
+
+                }else {
+                    print("no button after")
+                    button.addSubview(imageView)
+                    break
+                }
             }
             
         } else if position == .LEFT || position == .RIGHT {
@@ -272,7 +333,6 @@ public class TabBar : UIView {
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 
-                imageView.backgroundColor = .cyan
                 imageView.image = image
                 
                 let halfImageHeight = (image?.size.height)! / 2
@@ -282,7 +342,8 @@ public class TabBar : UIView {
                 
                 count += 1
             
-                setDefaultHeightFrame(imageView: imageView, button: button, image: image)
+                //Unless since button more appears
+                //setDefaultHeightFrame(imageView: imageView, button: button, image: image)
                 
                 total += ceil(button.frame.size.height)
                 
@@ -301,8 +362,6 @@ public class TabBar : UIView {
                         }
                         if ((nextNextButtonHeight + nextButtonHeight + total) > (screensizeHeight - 30)) {
                             if(buttonMoreYet == false) {
-                                print("button ", button)
-                                
                                 let image = UIImage(named: "more")
                                 let imageView = UIImageView(image: image)
                                 let nextButtonHeight =  nextButton!.frame.height / 2
@@ -317,55 +376,42 @@ public class TabBar : UIView {
                             }
                             buttonsExceedTabBar.append(nextNextButton!)
                             imageButtonExceed.append(icone[count])
-                            print(imageButtonExceed.count)
                             
+                            /*if(nextButton != nil) {
+                                buttonsExceedTabBar.append(nextButton!)
+                                print("buttonsExceedTabBar.count ", buttonsExceedTabBar.count)
+                            } else {
+                                break
+                            }*/
+                            
+                            print("icone[count] ", icone[count])
+                            print("current button height ", button.frame.height)
+                         
                             self.setTableView()
                         }
                     }
                     if(onlyTwoButton) {
                         button.addSubview(imageView)
                     }
+
                 }else {
                     print("no button after")
                     button.addSubview(imageView)
                     break
                 }
-                //button.addSubview(imageView)
-                //break
             }
         }
     }
-   
-        public func viewWillTransition(to: CGSize, with: UIViewControllerTransitionCoordinator) {
-            //super.viewWillTransition(to: size, with: coordinator)
-            if UIDevice.current.orientation.isLandscape {
-                print("Landscape")
-                
-            } else {
-                print("Portrait")
-                
-            }
+
+    public func viewWillTransition(to: CGSize, with: UIViewControllerTransitionCoordinator) {
+        //super.viewWillTransition(to: size, with: coordinator)
+        if UIDevice.current.orientation.isLandscape {
+            print("Landscape")
+            
+        } else {
+            print("Portrait")
+            
         }
-        
-    private func checkButtonOnTabBar(buttons: [UIButton]) {
-        let screenHeight = UIScreen.main.bounds.height
-        
-        print("buttons count : ", buttons.count)
-        print("screen height : ", screenHeight)
-        
-        var total: CGFloat = 0.0
-        for button in buttons {
-            total += button.frame.size.height
-        }
-        
-        print("button total height : ", total)
-        
-        if(total > screenHeight) {
-            print("Too much button on tab bar")
-        } else if (total < screenHeight) {
-            print("Total button fit inside tab bar")
-        }
-        
     }
     
     private func setButtonSizeWidth(buttonWidth: CGFloat) -> CGFloat {
@@ -419,7 +465,7 @@ public class TabBar : UIView {
     
     private func setDefaultWidthFrame(imageView: UIImageView, button: UIButton, image: UIImage?) {
         if(imageView.frame.maxX > button.frame.size.width || imageView.frame.minX < 0) {
-            imageView.frame = CGRect(x: 0, y: 0, width: button.frame.size.width, height: (image?.size.height)!)
+            imageView.frame = CGRect(x: 0, y: 0, width: (button.frame.size.width) / 2, height: (image?.size.height)!)
             
             print("image view is not inside button, default value assigned")
         } else {
