@@ -251,6 +251,8 @@ public class TabBar : UIView {
             for button in buttons {
                 let previous = buttons.before(button)
                 
+                print("button width ", button.frame.width)
+                print("screensizeWidth ", screensizeWidth)
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 imageView.image = image
@@ -262,6 +264,7 @@ public class TabBar : UIView {
                 previousFrame += previous?.frame.size.width ?? 0
                 
                 total += ceil(button.frame.size.width)
+                print("total ", total)
                 setDefaultWidthFrame(imageView: imageView, button: button, image: image)
                // button.addSubview(imageView)
             
@@ -274,33 +277,28 @@ public class TabBar : UIView {
                         let nextButtonWidth = ceil(CGFloat((nextButton?.frame.width)!))
                         let nextNextButtonWidth = ceil(CGFloat((nextNextButton?.frame.width)!))
                         
-                        if((nextNextButtonWidth + total) < screensizeWidth) {
+                        if((nextNextButtonWidth + total ) < screensizeWidth) {
                             button.addSubview(imageView)
                         }
           
                         if ((nextNextButtonWidth + nextButtonWidth + total) > screensizeWidth) {
                             if(buttonMoreYet == false) {
                                 let halfImageWidth = (image?.size.width)! / 2
-                                let halfButtonWidth = nextButton!.frame.width / 2
+                                let halfButtonWidth = nextNextButton!.frame.width / 2
                                 
                                 let image = UIImage(named: "more")
                                 let imageView = UIImageView(image: image)
                                 
-                                print("image width ", image!.size.width)
-
-                                let imageWidth = image!.size.width
-                                print("nextButton.frame.width ", nextButton!.frame.width)
-                                
                                 imageView.frame = CGRect(x: halfButtonWidth - halfImageWidth, y: 0, width: (image?.size.width)!, height: 50)
                                 
-                                nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+                                nextNextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
                                 
-                                nextButton?.addSubview(imageView)
+                                nextNextButton?.addSubview(imageView)
                                 
                                 buttonMoreYet = true
                             }
-                            buttonsExceedTabBar.append(nextNextButton!)
-                            imageButtonExceed.append(icone[count])
+                            buttonsExceedTabBar.append(nextButton!)
+                            imageButtonExceed.append(icone.after(icone[count])!)
                             
                             /*if(nextButton != nil) {
                                 buttonsExceedTabBar.append(nextButton!)
@@ -350,6 +348,7 @@ public class TabBar : UIView {
                 
                 let nextButton = buttons.after(button)
             
+            
                 if(nextButton != nil) {
                     let nextNextButton = buttons.after(nextButton!)
 
@@ -357,25 +356,35 @@ public class TabBar : UIView {
                         onlyTwoButton = false
                         let nextButtonHeight = ceil(CGFloat((nextButton?.frame.height)!))
                         let nextNextButtonHeight = ceil(CGFloat((nextNextButton?.frame.height)!))
-                        if((nextNextButtonHeight + total) <= screensizeHeight) {
+                        if((nextNextButtonHeight + total) < screensizeHeight) {
                             button.addSubview(imageView)
                         }
                         if ((nextNextButtonHeight + nextButtonHeight + total) > (screensizeHeight - 30)) {
+
                             if(buttonMoreYet == false) {
                                 let image = UIImage(named: "more")
                                 let imageView = UIImageView(image: image)
-                                let nextButtonHeight =  nextButton!.frame.height / 2
+                                let halfImageHeight = (image?.size.height)! / 2
+                                let halfButtonHeight = nextNextButton!.frame.height / 2
                                 
-                                imageView.frame = CGRect(x: 0, y: nextButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
                                 
-                                nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+                                imageView.frame = CGRect(x: 0, y: halfButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
                                 
-                                nextButton?.addSubview(imageView)
+                                nextNextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+                                
+                                nextNextButton?.addSubview(imageView)
                                 
                                 buttonMoreYet = true
                             }
-                            buttonsExceedTabBar.append(nextNextButton!)
-                            imageButtonExceed.append(icone[count])
+                            for i in icone {
+                                print("icone de i ", i)
+                            }
+                            print("buttonsExceedTabBar.count ", buttonsExceedTabBar.count)
+                            //print("current icon ", icone[count])
+                            //print("next icon ", icone.after(icone[count]))
+                            //print("next next icon ", icone.after(icone.after(icone[count])!))
+                            buttonsExceedTabBar.append(nextButton!)
+                            imageButtonExceed.append(icone.after(icone[count])!)
                             
                             /*if(nextButton != nil) {
                                 buttonsExceedTabBar.append(nextButton!)
@@ -607,6 +616,7 @@ extension TabBar: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("buttonsExceedTabBar.count in tv ", buttonsExceedTabBar.count)
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         let imageButton = imageButtonExceed[indexPath.row]
         
