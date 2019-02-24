@@ -265,7 +265,8 @@ public class TabBar : UIView {
             
         } else if position == .LEFT || position == .RIGHT {
             var buttonMoreYet = false
-
+            var onlyTwoButton = true
+            
             for button in buttons {
                 
                 let image = UIImage(named: icone[count])
@@ -292,14 +293,12 @@ public class TabBar : UIView {
                     let nextNextButton = buttons.after(nextButton!)
 
                     if((nextNextButton) != nil) {
+                        onlyTwoButton = false
                         let nextButtonHeight = ceil(CGFloat((nextButton?.frame.height)!))
                         let nextNextButtonHeight = ceil(CGFloat((nextNextButton?.frame.height)!))
-                        
                         if((nextNextButtonHeight + total) <= screensizeHeight) {
-                            
                             button.addSubview(imageView)
                         }
-                        
                         if ((nextNextButtonHeight + nextButtonHeight + total) > (screensizeHeight - 30)) {
                             if(buttonMoreYet == false) {
                                 print("button ", button)
@@ -316,19 +315,23 @@ public class TabBar : UIView {
                                 
                                 buttonMoreYet = true
                             }
-                            
                             buttonsExceedTabBar.append(nextNextButton!)
-                            
                             imageButtonExceed.append(icone[count])
                             print(imageButtonExceed.count)
                             
                             self.setTableView()
                         }
                     }
+                    if(onlyTwoButton) {
+                        button.addSubview(imageView)
+                    }
                 }else {
                     print("no button after")
+                    button.addSubview(imageView)
                     break
                 }
+                //button.addSubview(imageView)
+                //break
             }
         }
     }
