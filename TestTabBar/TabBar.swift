@@ -146,7 +146,18 @@ public class TabBar : UIView {
 
     
     private func setTableView() {
+       /* switch position {
+        case .LEFT:
+            tableView = UITableView(frame: CGRect(x: 60, y: 150, width: 50, height: 300))
+        case .RIGHT:
+            tableView = UITableView(frame: <#T##CGRect#>)
+        case .TOP:
+            <#code#>
+        case .BOTTOM:
+            <#code#>
+        }*/
         tableView = UITableView(frame: CGRect(x: 60, y: 150, width: 50, height: 300))
+
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
@@ -196,12 +207,7 @@ public class TabBar : UIView {
                     buttons[i].addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
                     buttons[i].backgroundColor = colorNotPressed
                 }
-            
-                
-              //  if(isLandscape()) {
-             //       addButtonToTabBar(sizeTabBar: screensizeWidth, sizeButton: total)
-              //  }
-                
+           
                 contentView.addSubview(button)
             }
             
@@ -236,10 +242,6 @@ public class TabBar : UIView {
         var count: Int = 0
         var previousFrame: CGFloat = 0.0
         
-//        var buttonsExceedTabBar = [UIButton]()
-        
-       // var previousButton = UIButton()
-        
         if position == .BOTTOM || position == .TOP {
             var gap: CGFloat = 0.0
 
@@ -262,7 +264,10 @@ public class TabBar : UIView {
             }
             
         } else if position == .LEFT || position == .RIGHT {
+            var buttonMoreYet = false
+
             for button in buttons {
+                
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 
@@ -280,54 +285,54 @@ public class TabBar : UIView {
                 
                 total += ceil(button.frame.size.height)
                 
+                
                 let nextButton = buttons.after(button)
-                let nextNextButton = buttons.after(nextButton!)
-                
-               
-                
-                if((nextNextButton) != nil) {
-                    let nextButtonHeight = ceil(CGFloat((nextButton?.frame.height)!))
-                    let nextNextButtonHeight = ceil(CGFloat((nextNextButton?.frame.height)!))
-                    
-                    if((nextNextButtonHeight + total) < screensizeHeight - 30) {
-                         button.addSubview(imageView)
+            
+                if(nextButton != nil) {
+                    let nextNextButton = buttons.after(nextButton!)
+
+                    if((nextNextButton) != nil) {
+                        let nextButtonHeight = ceil(CGFloat((nextButton?.frame.height)!))
+                        let nextNextButtonHeight = ceil(CGFloat((nextNextButton?.frame.height)!))
+                        
+                        if((nextNextButtonHeight + total) <= screensizeHeight) {
+                            
+                            button.addSubview(imageView)
+                        }
+                        
+                        if ((nextNextButtonHeight + nextButtonHeight + total) > (screensizeHeight - 30)) {
+                            if(buttonMoreYet == false) {
+                                print("button ", button)
+                                
+                                let image = UIImage(named: "more")
+                                let imageView = UIImageView(image: image)
+                                let nextButtonHeight =  nextButton!.frame.height / 2
+                                
+                                imageView.frame = CGRect(x: 0, y: nextButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
+                                
+                                nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
+                                
+                                nextButton?.addSubview(imageView)
+                                
+                                buttonMoreYet = true
+                            }
+                            
+                            buttonsExceedTabBar.append(nextNextButton!)
+                            
+                            imageButtonExceed.append(icone[count])
+                            print(imageButtonExceed.count)
+                            
+                            self.setTableView()
+                        }
                     }
-                    if ((nextNextButtonHeight + nextButtonHeight + total) > screensizeHeight - 30) {
-                        //let nextIcone = icone.after(icone[count])
-                        //let nextNextIcone = icone.after(nextIcone!)
-
-                        let image = UIImage(named: "more")
-                        let imageView = UIImageView(image: image)
-                        let nextButtonHeight =  nextButton!.frame.height / 2
-                        
-                        imageView.frame = CGRect(x: 0, y: nextButtonHeight - halfImageHeight, width: 60, height: (image?.size.height)!)
-                      
-                        nextButton?.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
-                        
-                          self.setTableView()
-                        nextButton?.addSubview(imageView)
-
-                        buttonsExceedTabBar.append(nextNextButton!)
-                        
-                   
-                        print("counter 2 ", count)
-
-                        imageButtonExceed.append(icone[count])
-                 
-                        
-                        //print("nextNextButton height ", nextNextButton?.frame.height)
-                       // print("buttonsExceedTabBar.count ", buttonsExceedTabBar.count)
-                    }
-                    
-                    print("there is two buttons more")
-                } else {
+                }else {
                     print("no button after")
                     break
                 }
             }
         }
     }
-    
+   
         public func viewWillTransition(to: CGSize, with: UIViewControllerTransitionCoordinator) {
             //super.viewWillTransition(to: size, with: coordinator)
             if UIDevice.current.orientation.isLandscape {
