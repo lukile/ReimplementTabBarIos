@@ -18,6 +18,8 @@ public class TabBar : UIView {
     private var container: UIViewController?
     private var position: Position?
     private var bgColor: UIColor?
+    private var colorPressed: UIColor?
+    private var colorNotPressed: UIColor?
     private var buttons = [UIButton]()
     private var buttonsExceedTabBar = [UIButton]()
     private var imageButtonExceed = [String]()
@@ -32,18 +34,11 @@ public class TabBar : UIView {
     let screensizeHeight = UIScreen.main.bounds.height
     
     
-    let colorPressed = UIColor(rgb: 0xD7BBC5)
-    let colorNotPressed = UIColor(rgb: 0x235678)
+    
     
     var buttonsColor: [UIButton] = [UIButton]()
 
-   /* public func setColorButton(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat, buttons: [UIButton]) {
-        colorNotPressed = UIColor(red: red, green: green, blue: blue)
-        for button in buttons {
-            button.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: alpha)
-        }
-    }*/
-    
+   
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -71,6 +66,19 @@ public class TabBar : UIView {
     public func setTabBarColor(color: UIColor) {
         contentView.backgroundColor = color
     }
+    
+    public func setColorButton(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIColor {
+         colorNotPressed = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+     
+        return self.colorNotPressed!
+    }
+    
+    public func setButtonColorPressed(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIColor{
+            colorPressed = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        
+        return self.colorPressed!
+    }
+    
    
     public func setContainer(container: UIViewController) {
         self.container = container
@@ -524,7 +532,7 @@ public class TabBar : UIView {
             btn.backgroundColor = self.colorPressed
             btn.subviews.forEach { img in
                 imageView = img as! UIImageView
-                imageView!.setImageColor(color: colorNotPressed)
+                imageView!.setImageColor(color: colorNotPressed!)
             }
             //imageView = btn.subviews.first as! UIImageView
             UIView.commitAnimations()
@@ -592,7 +600,7 @@ extension BidirectionalCollection where Iterator.Element: Equatable {
 }
 
 extension UIColor {
-    convenience init(red: Int, green: Int, blue: Int) {
+    convenience init(red: CGFloat, green: CGFloat, blue: CGFloat) {
         assert(red >= 0 && red <= 255, "Invalid red component")
         assert(green >= 0 && green <= 255, "Invalid green component")
         assert(blue >= 0 && blue <= 255, "Invalid blue component")
@@ -602,9 +610,9 @@ extension UIColor {
     
     convenience init(rgb: Int) {
         self.init(
-            red: (rgb >> 16) & 0xFF,
-            green: (rgb >> 8) & 0xFF,
-            blue: rgb & 0xFF
+            red: CGFloat((rgb >> 16) & 0xFF),
+            green: CGFloat((rgb >> 8) & 0xFF),
+            blue: CGFloat(rgb & 0xFF)
         )
     }
 }
