@@ -362,6 +362,9 @@ public class TabBar : UIView {
                                 
                                 nextNextButton?.addSubview(imageView)
                                 
+                                 nextNextButton?.addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
+                                 //nextNextButton?.backgroundColor = colorNotPressed
+                                
                                 buttonMoreYet = true
                             }
                         
@@ -380,7 +383,11 @@ public class TabBar : UIView {
                     button.addSubview(imageView)
                     break
                 }
+                /*button.addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
+                button.backgroundColor = colorNotPressed*/
+            
             }
+            
         }
     }
 
@@ -494,9 +501,20 @@ public class TabBar : UIView {
                 }
                 previousBtn?.imageView?.setImageColor(color: UIColor.black)
                 previousBtn?.isSelected = false
-                buttonsColor.remove(at: 0)
+                for i in 0..<buttonsColor.count {
+                    if(buttonsColor.count > 1) {
+                        buttonsColor.remove(at: i)
+                    }
+                }
+                
             }
         } else {
+            for i in 0..<buttonsColor.count {
+                if(buttonsColor.count > 1) {
+                    buttonsColor.remove(at: i)
+                }
+            }
+            
             print("SELECTED")
         }
     }
