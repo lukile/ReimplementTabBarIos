@@ -218,7 +218,7 @@ public class TabBar : UIView {
     }
     
     @objc func clickButtonSearchInput(tapGestureRecognizer: UITapGestureRecognizer) {
-        print(self.inputSearch.text)
+        print(self.inputSearch.text as Any)
         guard let textInput = self.inputSearch.text else {
             return
         }
@@ -450,7 +450,7 @@ public class TabBar : UIView {
             UIView.setAnimationDuration(0.1)
             btn.backgroundColor = self.colorPressed
             btn.subviews.forEach { img in
-                imageView = img as! UIImageView
+                imageView = img as? UIImageView
                 imageView!.setImageColor(color: colorNotPressed!)
             }
             UIView.commitAnimations()
@@ -461,7 +461,7 @@ public class TabBar : UIView {
                 let previousBtn = buttonsColor.first
                 previousBtn?.backgroundColor = colorNotPressed
                 previousBtn?.subviews.forEach { img in
-                    imageViewPrevious = img as! UIImageView
+                    imageViewPrevious = img as? UIImageView
                     imageViewPrevious!.setImageColor(color: UIColor.black)
                 }
                 previousBtn?.imageView?.setImageColor(color: UIColor.black)
