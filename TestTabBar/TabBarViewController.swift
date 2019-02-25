@@ -21,8 +21,8 @@ public class TabBarViewController: UIViewController {
         let position = tabBar.definePosition(position: Position.LEFT)
         let buttons = tabBar.selectNumberOfButton(numberButton: 7)
         tabBar.chooseSizeButton(buttons: buttons, position: position, sizeButtons: 0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.3)
-        
-        tabBar.addImageView(buttons: buttons, position: position, icone: "home", "info", "profile", "folder", "settings", "home", "info")
+        //tabBar.setColorButton(red: 0.4, green: 0.1, blue: 0.2, alpha: 0.5, buttons: buttons)
+        tabBar.addImageView(buttons: buttons, position: position, icone: "search", "info", "profile", "folder", "settings", "home", "info")
 
     }
     

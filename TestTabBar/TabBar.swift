@@ -25,6 +25,8 @@ public class TabBar : UIView {
     private var arrayButtonDeleted: [UIButton] = []
     private var tableView: UITableView!
     private var total = CGFloat()
+    private var inputSearch: UITextField = UITextField()
+    private var textInputSearch: String = ""
     
     let screensizeWidth = UIScreen.main.bounds.width
     let screensizeHeight = UIScreen.main.bounds.height
@@ -35,6 +37,12 @@ public class TabBar : UIView {
     
     var buttonsColor: [UIButton] = [UIButton]()
 
+   /* public func setColorButton(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat, buttons: [UIButton]) {
+        colorNotPressed = UIColor(red: red, green: green, blue: blue)
+        for button in buttons {
+            button.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        }
+    }*/
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -68,19 +76,13 @@ public class TabBar : UIView {
         self.container = container
     }
     
-    public func build() {
-        // container must not be null to continue
-        
-        //definePosition(position: Position.LEFT)
+   /* public func build() {
+      
         self.backgroundColor = .white
 
-        /*defineButtons()
+       
         
-        for(button in buttons) {
-            self.addSubview(button)
-        }*/
-        
-    }
+    }*/
     
     public func definePosition(position: Position) -> Position {
         switch position {
@@ -230,6 +232,35 @@ public class TabBar : UIView {
             }
         }
     }
+    public func getTextInputSearch() -> String? {
+        return self.inputSearch.text
+    }
+    
+    @objc public func buttonSearch(_ sender:UIButton!)  {
+        self.inputSearch.frame = CGRect(x: 150, y: 250, width: 150, height: 25)
+        self.setRightImage(imageName: "search")
+        self.inputSearch.borderBottom(textField: self.inputSearch)
+        self.inputSearch.isHidden = !self.inputSearch.isHidden
+        self.addSubview(self.inputSearch)
+    }
+    
+    @objc func clickButtonSearchInput(tapGestureRecognizer: UITapGestureRecognizer) {
+        print(self.inputSearch.text)
+        guard let textInput = self.inputSearch.text else {
+            return
+        }
+        self.textInputSearch = textInput
+    }
+    
+    private func setRightImage(imageName:String) {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(clickButtonSearchInput(tapGestureRecognizer:)))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        imageView.image = UIImage(named: imageName)
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
+        self.inputSearch.rightView = imageView;
+        self.inputSearch.rightViewMode = .always
+    }
     
    /* private func deleteImageFromImageView(imageView: UIImageView) {
         imageView.image = nil
@@ -262,7 +293,7 @@ public class TabBar : UIView {
                 previousFrame += previous?.frame.size.width ?? 0
                 
                 total += ceil(button.frame.size.width)
-                print("total ", total)
+                
                 setDefaultWidthFrame(imageView: imageView, button: button, image: image)
             
                 let nextButton = buttons.after(button)
@@ -318,6 +349,13 @@ public class TabBar : UIView {
             
             for button in buttons {
                 
+                if(icone[count] == "search") {
+                    button.addTarget(self, action: #selector(TabBar.buttonSearch(_:)), for: .touchUpInside)
+
+                } else {
+                    print("nope")
+                }
+                
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 
@@ -368,6 +406,7 @@ public class TabBar : UIView {
                                 buttonMoreYet = true
                             }
                         
+
                             buttonsExceedTabBar.append(nextButton!)
                             imageButtonExceed.append(icone.after(icone[count])!)
                          
@@ -641,9 +680,6 @@ class CustomCell: UITableViewCell {
     }
 }
 
-
-
-
 extension UIImageView {
     func setImageColor(color: UIColor) {
         let templateImage = self.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -653,3 +689,14 @@ extension UIImageView {
 }
 
 
+extension UITextField {
+    func borderBottom(textField: UITextField) {
+        let border = CALayer()
+        let width = CGFloat(1.0)
+        border.borderColor = UIColor.gray.withAlphaComponent(0.3).cgColor
+        border.frame = CGRect(x: 0, y: textField.frame.size.height - width, width: textField.frame.size.width, height: textField.frame.size.height)
+        border.borderWidth = width
+        textField.layer.addSublayer(border)
+        textField.layer.masksToBounds = true
+    }
+}
