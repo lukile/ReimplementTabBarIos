@@ -12,9 +12,6 @@ import SnapKit
 
 public class TabBar : UIView {
     
-    //commentaire test
-    
-    // private let <= const
     private var container: UIViewController?
     private var position: Position?
     private var bgColor: UIColor?
@@ -83,15 +80,8 @@ public class TabBar : UIView {
     public func setContainer(container: UIViewController) {
         self.container = container
     }
-    
-   /* public func build() {
-      
-        self.backgroundColor = .white
 
-       
-        
-    }*/
-    
+
     public func definePosition(position: Position) -> Position {
         switch position {
         case .BOTTOM:
@@ -131,29 +121,6 @@ public class TabBar : UIView {
         return buttons
     }
     
-    /*private func changePlaceButton() {
-        guard let lastButton = self.buttons.last else {
-            return;
-        }
-        let imageMore = UIImage(named: "more")
-        let buttonMore: UIButton = UIButton()
-        guard let frameButtonMore = self.buttons.last?.frame else { return }
-        buttonMore.frame = frameButtonMore
-        buttonMore.setImage(imageMore, for: .normal)
-        buttonMore.addTarget(self, action:#selector(TabBar.buttonMore(_:)), for: .touchUpInside)
-        self.buttons.removeLast()
-        self.buttons.append(buttonMore)
-        self.arrayButtonDeleted.insert(lastButton, at: 0)
-        
-        var total: CGFloat = 0.0
-        
-        for button in self.buttons {
-            self.contentView.addSubview(button)
-            total += button.frame.size.width
-        }
-    }*/
-
-    
     private func setTableView(position: Position) {
         switch position {
         case .LEFT:
@@ -166,7 +133,6 @@ public class TabBar : UIView {
          tableView = UITableView(frame: CGRect(x: screensizeWidth - 60, y: screensizeHeight - 380, width: 60, height: 310))
         }
         
-
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
@@ -189,7 +155,6 @@ public class TabBar : UIView {
         }
     }
   
-    
     public func chooseSizeButton(buttons: [UIButton], position: Position, sizeButtons: CGFloat...) {
         
         var total: CGFloat = 0.0
@@ -269,10 +234,6 @@ public class TabBar : UIView {
         self.inputSearch.rightView = imageView;
         self.inputSearch.rightViewMode = .always
     }
-    
-   /* private func deleteImageFromImageView(imageView: UIImageView) {
-        imageView.image = nil
-    }*/
     
     public func addImageView(buttons: [UIButton], position: Position, icone: String...){
         var total: CGFloat = 0.0
@@ -409,12 +370,10 @@ public class TabBar : UIView {
                                 nextNextButton?.addSubview(imageView)
                                 
                                  nextNextButton?.addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
-                                 //nextNextButton?.backgroundColor = colorNotPressed
                                 
                                 buttonMoreYet = true
                             }
                         
-
                             buttonsExceedTabBar.append(nextButton!)
                             imageButtonExceed.append(icone.after(icone[count])!)
                          
@@ -430,9 +389,6 @@ public class TabBar : UIView {
                     button.addSubview(imageView)
                     break
                 }
-                /*button.addTarget(self, action: #selector(btnClick(_:)), for: .touchUpInside)
-                button.backgroundColor = colorNotPressed*/
-            
             }
             
         }
@@ -456,43 +412,6 @@ public class TabBar : UIView {
     private func setButtonHeight(buttonHeight: CGFloat) -> CGFloat {
         return screensizeHeight * buttonHeight
     }
-    
-    /*private func addButtonToTabBar(sizeTabBar: CGFloat, sizeButton: CGFloat) -> [UIButton] {
-        var i: Int = 0
-        print("size Button : ", sizeButton)
-        print("size height : ", sizeTabBar)
-        for button in buttons {
-           // self.buttons[i].frame = CGRect(x: 0, y: 0, width: 100, height: 50)
-           // sizeButton += self.buttons[i].frame.size.height
-            if(sizeButton > sizeTabBar) {
-                print("sizeButton > sizeTabBar")
-                self.arrayButtonDeleted.append(button)
-            
-                print("arrayButton deleted : ", arrayButtonDeleted)
-                
-                if let index = self.buttons.index(of: button) {
-                    self.buttons.remove(at: index)
-                    i = index
-                }
-            } else {
-                i += 1
-            }
-        }
-        self.changePlaceButton()
-        self.setTableView()
-        return self.buttons
-    }*/
-    
-    /*public func fixWidthButton(button: UIButton, width: CGFloat) {
-        let imageButtonWidth = setButtonSize(buttonWidth: width)
-        button.frame = CGRect(x: 0, y: 0, width:imageButtonWidth, height: 50)
-    }*/
-    
-   /* private func setButtonSize(buttonWidth: CGFloat) -> CGFloat {
-        let screensizeWidth = UIScreen.main.bounds.width
-        
-        return screensizeWidth * buttonWidth
-    }*/
     
     public func setBackgroundColor(color: UIColor?) {
         self.bgColor = color
@@ -534,7 +453,6 @@ public class TabBar : UIView {
                 imageView = img as! UIImageView
                 imageView!.setImageColor(color: colorNotPressed!)
             }
-            //imageView = btn.subviews.first as! UIImageView
             UIView.commitAnimations()
             print("NOT SELECTED")
             btn.isSelected = true
@@ -617,36 +535,6 @@ extension UIColor {
     }
 }
 
-class CustomUIView: UIView {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = UIColor.blue
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        
-        print("touch start")
-        backgroundColor = UIColor.red
-        
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        
-        print("touch ended")
-        backgroundColor = UIColor.blue
-        
-    }
-    
-}
 extension TabBar: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return buttonsExceedTabBar.count
@@ -695,7 +583,6 @@ extension UIImageView {
         self.tintColor = color
     }
 }
-
 
 extension UITextField {
     func borderBottom(textField: UITextField) {
