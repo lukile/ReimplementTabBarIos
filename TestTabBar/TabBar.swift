@@ -20,8 +20,6 @@ public class TabBar : UIView {
     private var buttons = [UIButton]()
     private var buttonsExceedTabBar = [UIButton]()
     private var imageButtonExceed = [String]()
-    private var numberButtons = [Int]()
-    private var arrayButtonDeleted: [UIButton] = []
     private var tableView: UITableView!
     private var total = CGFloat()
     private var inputSearch: UITextField = UITextField()
@@ -30,12 +28,8 @@ public class TabBar : UIView {
     let screensizeWidth = UIScreen.main.bounds.width
     let screensizeHeight = UIScreen.main.bounds.height
     
-    
-    
-    
     var buttonsColor: [UIButton] = [UIButton]()
 
-   
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
