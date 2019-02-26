@@ -12,7 +12,7 @@ import SnapKit
 
 public class TabBar : UIView {
     
-    private var container: UIViewController?
+   //private var container: UIViewController?
     private var position: Position?
     private var bgColor: UIColor?
     private var colorPressed: UIColor?
@@ -24,6 +24,7 @@ public class TabBar : UIView {
     private var total = CGFloat()
     private var inputSearch: UITextField = UITextField()
     private var textInputSearch: String = ""
+    public var tab = [UIButton]()
     
     let screensizeWidth = UIScreen.main.bounds.width
     let screensizeHeight = UIScreen.main.bounds.height
@@ -71,9 +72,9 @@ public class TabBar : UIView {
     }
     
    
-    public func setContainer(container: UIViewController) {
+    /*public func setContainer(container: UIViewController) {
         self.container = container
-    }
+    }*/
 
 
     public func definePosition(position: Position) -> Position {
@@ -118,13 +119,13 @@ public class TabBar : UIView {
     private func setTableView(position: Position) {
         switch position {
         case .LEFT:
-            tableView = UITableView(frame: CGRect(x: 60, y: screensizeHeight - 315, width: 60, height: 300))
+            tableView = UITableView(frame: CGRect(x: 60, y: Int(screensizeHeight - 315), width: 60, height: buttonsExceedTabBar.count * 50))
          case .RIGHT:
-            tableView = UITableView(frame: CGRect(x: screensizeWidth - 120, y: screensizeHeight - 315, width: 60, height: 310))
+            tableView = UITableView(frame: CGRect(x: Int(screensizeWidth - 120), y: Int(screensizeHeight - 315), width: 60, height: buttonsExceedTabBar.count * 50))
         case .TOP:
-           tableView = UITableView(frame: CGRect(x: screensizeWidth - 60, y: 110, width: 60, height: 310))
+            tableView = UITableView(frame: CGRect(x: Int(screensizeWidth - 60), y: 110, width: 60, height: buttonsExceedTabBar.count * 50))
         case .BOTTOM:
-         tableView = UITableView(frame: CGRect(x: screensizeWidth - 60, y: screensizeHeight - 380, width: 60, height: 310))
+            tableView = UITableView(frame: CGRect(x: Int(screensizeWidth - 60), y: Int(screensizeHeight) - buttonsExceedTabBar.count * 50 - 60, width: 60, height: buttonsExceedTabBar.count * 50))
         }
         
         tableView.dataSource = self
@@ -163,7 +164,7 @@ public class TabBar : UIView {
                 
                 button.frame = CGRect(x: (previousButton?.frame.size.width ?? 0) + gap + previousFrameSize, y: 0, width: ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count])), height: 50)
                 
-                total += ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count]))
+               // total += ceil(setButtonSizeWidth(buttonWidth: sizeButtons[count]))
                 
                 gap = 0.1
                 count += 1
@@ -184,7 +185,7 @@ public class TabBar : UIView {
              
                  button.frame = CGRect(x: 0, y: (previousButton?.frame.height ?? 30) + gap + previousFrameSize, width: 60, height: setButtonHeight(buttonHeight: sizeButtons[count]))
                 
-                total += ceil(setButtonHeight(buttonHeight: sizeButtons[count]))
+                //total += ceil(setButtonHeight(buttonHeight: sizeButtons[count]))
                 
                 gap = 0.1
                 count += 1
@@ -241,6 +242,11 @@ public class TabBar : UIView {
             var onlyTwoButton = true
             
             for button in buttons {
+                if(icone[count] == "search") {
+                    button.addTarget(self, action: #selector(TabBar.buttonSearch(_:)), for: .touchUpInside)
+                    
+                } 
+                
                 let previous = buttons.before(button)
                 
                 print("button width ", button.frame.width)
@@ -315,8 +321,6 @@ public class TabBar : UIView {
                 if(icone[count] == "search") {
                     button.addTarget(self, action: #selector(TabBar.buttonSearch(_:)), for: .touchUpInside)
 
-                } else {
-                    print("nope")
                 }
                 
                 let image = UIImage(named: icone[count])
@@ -538,6 +542,7 @@ extension TabBar: UITableViewDelegate, UITableViewDataSource {
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
         let imageButton = imageButtonExceed[indexPath.row]
         
+  
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         cell = CustomCell(frame: CGRect(x: 0, y: 0, width: 50, height: 0), icone: imageButton)
