@@ -242,6 +242,7 @@ public class TabBar : UIView {
             var onlyTwoButton = true
             
             for button in buttons {
+               
                 if(icone[count] == "search") {
                     button.addTarget(self, action: #selector(TabBar.buttonSearch(_:)), for: .touchUpInside)
                 }
@@ -250,9 +251,14 @@ public class TabBar : UIView {
                 
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
+                
+                let halfImageWidth = (image?.size.width)! / 2
+                let halfButtonWidth = button.frame.width / 2
+                
+                
                 imageView.image = image
               
-                imageView.frame = CGRect(x: (previous?.frame.size.width ?? 0) + gap + previousFrame, y: 0, width: (image?.size.width)!, height: 50)
+                imageView.frame = CGRect(x: halfButtonWidth - halfImageWidth , y: 0, width: (image?.size.width)!, height: 50)
                 
                 gap += 0.1
                 count += 1
@@ -440,18 +446,16 @@ public class TabBar : UIView {
         
         print(sender.isSelected)
         if(!sender.isSelected){
-            UIView.beginAnimations("test", context: nil)
-            UIView.setAnimationTransition(.none, for: self, cache: false)
-            UIView.setAnimationDuration(0.1)
+            //UIView.beginAnimations("test", context: nil)
+            //UIView.setAnimationTransition(.none, for: self, cache: false)
+            //UIView.setAnimationDuration(0.1)
             btn.backgroundColor = self.colorPressed
             btn.subviews.forEach { img in
                 imageView = img as? UIImageView
                 imageView!.setImageColor(color: colorNotPressed!)
             }
-            UIView.commitAnimations()
-            print("NOT SELECTED")
+            //UIView.commitAnimations()
             btn.isSelected = true
-            print(buttonsColor.count)
             if(buttonsColor.count > 1 && buttonsColor.count <= 2){
                 let previousBtn = buttonsColor.first
                 previousBtn?.backgroundColor = colorNotPressed
@@ -474,8 +478,6 @@ public class TabBar : UIView {
                     buttonsColor.remove(at: i)
                 }
             }
-            
-            print("SELECTED")
         }
     }
 }
@@ -512,23 +514,6 @@ extension BidirectionalCollection where Iterator.Element: Equatable {
     }
 }
 
-extension UIColor {
-    convenience init(red: CGFloat, green: CGFloat, blue: CGFloat) {
-        assert(red >= 0 && red <= 255, "Invalid red component")
-        assert(green >= 0 && green <= 255, "Invalid green component")
-        assert(blue >= 0 && blue <= 255, "Invalid blue component")
-        
-        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
-    }
-    
-    convenience init(rgb: Int) {
-        self.init(
-            red: CGFloat((rgb >> 16) & 0xFF),
-            green: CGFloat((rgb >> 8) & 0xFF),
-            blue: CGFloat(rgb & 0xFF)
-        )
-    }
-}
 
 extension TabBar: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
