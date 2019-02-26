@@ -21,10 +21,10 @@ public class TabBarViewController: UIViewController {
         tabBar.setColorButton(red: 0.4, green: 0.1, blue: 0.2, alpha: 0.5)
         tabBar.setButtonColorPressed(red: 0.1, green: 0.1, blue: 0.4, alpha: 0.2)
         let position = tabBar.definePosition(position: Position.BOTTOM)
-        let buttons = tabBar.selectNumberOfButton(numberButton: 8)
-        tabBar.chooseSizeButton(buttons: buttons, position: position, sizeButtons: 0.3, 0.2, 0.2, 0.1, 0.2, 0.1, 0.3, 0.2)
+        let buttons = tabBar.selectNumberOfButton(numberButton: 9)
+        tabBar.chooseSizeButton(buttons: buttons, position: position, sizeButtons: 0.3, 0.2, 0.2, 0.1, 0.2, 0.1, 0.3, 0.2, 0.1)
       
-        tabBar.addImageView(buttons: buttons, position: position, icone: "search", "info", "profile", "folder", "settings", "home", "info", "profile")
+        tabBar.addImageView(buttons: buttons, position: position, icone: "search", "info", "profile", "folder", "settings", "home", "param", "reddit", "swift")
 
     }
     

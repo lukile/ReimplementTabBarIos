@@ -244,13 +244,10 @@ public class TabBar : UIView {
             for button in buttons {
                 if(icone[count] == "search") {
                     button.addTarget(self, action: #selector(TabBar.buttonSearch(_:)), for: .touchUpInside)
-                    
-                } 
+                }
                 
                 let previous = buttons.before(button)
                 
-                print("button width ", button.frame.width)
-                print("screensizeWidth ", screensizeWidth)
                 let image = UIImage(named: icone[count])
                 let imageView = UIImageView(image: image)
                 imageView.image = image
